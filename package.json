@@ -1,0 +1,35 @@
+{
+  "name": "@recogito/recogito-connections",
+  "version": "0.1.0",
+  "description": "A plugin for drawing connections between annotations",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "webpack serve --open --mode=development",
+    "build": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/recogito/recogito-connections.git"
+  },
+  "keywords": [
+    "Annotation",
+    "Image Annotation",
+    "Text Annotation",
+    "Networks"
+  ],
+  "author": "Rainer Simon",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/recogito/recogito-connections/issues"
+  },
+  "homepage": "https://github.com/recogito/recogito-connections#readme",
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
+    "babel-loader": "^8.2.3",
+    "html-webpack-plugin": "^5.5.0",
+    "webpack": "^5.64.3",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.5.0"
+  }
+}
