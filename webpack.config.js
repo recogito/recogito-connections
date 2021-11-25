@@ -13,7 +13,7 @@ module.exports = {
     filename: 'recogito-connections.js',
     library: ['recogito', 'Connections'],
     libraryTarget: 'umd',
-    umdNamedDefine: true
+    libraryExport: 'default'
   },
   devtool: 'source-map',
   performance: {
@@ -42,7 +42,9 @@ module.exports = {
             ]
           }
         }
-      }
+      },
+      { test: /\.css$/,  use: [ 'style-loader', 'css-loader'] },
+      { test: /\.scss$/, use: [ 'style-loader', 'css-loader', 'sass-loader' ] }
     ]
   },
   devServer: {

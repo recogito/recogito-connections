@@ -48,14 +48,15 @@
     </div>
 
     <script type="text/javascript">
-      (function() {
-        // Intialize Recogito
+      window.onload = function() {
         var r = Recogito.init({
           content: 'content'
         });
 
+        var connections = recogito.Connections();
+
         r.loadAnnotations('annotations.w3c.json');
-      })();
+      };
     </script>
   </body>
 </html>
