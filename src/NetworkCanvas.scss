@@ -5,4 +5,24 @@ svg.r6o-connections-canvas {
   width:100vw;
   height:100vh;
   pointer-events:none;
+
+  .r6o-connections-hover {
+    fill:transparent;
+    stroke:#000;
+    stroke-width:2px;
+  }
+
+  g.connection-arrow {
+
+    circle, polygon {
+      fill:red;
+    }
+
+    path {
+      fill:none;
+      stroke:red;
+      stroke-width:2px;
+    }
+
+  }
 }
