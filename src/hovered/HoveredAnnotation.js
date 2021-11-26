@@ -14,6 +14,9 @@ export default class HoveredAnnotation {
     this.connectorHandles = this.elements.map(elem => new ConnectorHandle(elem));        
   }
 
+  getBox = () => 
+    this.elements[0].getBoundingClientRect();
+
   addTo = parentNode =>
     this.connectorHandles.forEach(h => h.addTo(parentNode));
 

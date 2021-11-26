@@ -1,5 +1,5 @@
+import { G } from '@svgdotjs/svg.js';
 import { getBoxToBoxArrow } from 'perfect-arrows';
-import { SVG_NAMESPACE } from './SVG';
 
 const CONFIG = {
   bow: 0,
@@ -14,27 +14,22 @@ const CONFIG = {
 
 export default class Arrow {
 
-  constructor(fromBox, svgEl) {
-    this.from = fromBox;
-    this.to = fromBox;
+  constructor(hoveredAnnotation) {
+    this.from = hoveredAnnotation.getBox();
+    this.to = { x: this.from.x, y: this.from.y, width: 0, height: 0};
 
-    this.g = document.createElementNS(SVG_NAMESPACE, 'g');
-    this.g.setAttribute('class', 'connection-arrow');
+    this.g = new G().attr('class', 'connection-arrow');
 
-    this.path = document.createElementNS(SVG_NAMESPACE, 'path');
-
-    this.base = document.createElementNS(SVG_NAMESPACE, 'circle');
-    this.base.setAttribute('r', 5);
-
-    this.head = document.createElementNS(SVG_NAMESPACE, 'polygon');
-    this.head.setAttribute('points', '0,-6 12,0, 0,6');
-
-    this.g.appendChild(this.path);
-    this.g.appendChild(this.base);
-    this.g.appendChild(this.head);
-
-    svgEl.appendChild(this.g);
+    this.path = this.g.path();
+    this.base = this.g.circle(5);
+    this.head = this.g.polygon('0,-6 12,0, 0,6');
   }
+
+  addTo = svg => 
+    this.g.addTo(svg);
+
+  destroy = () =>
+    this.g.remove();
 
   render = () => {
     const arrow = getBoxToBoxArrow(
@@ -49,15 +44,12 @@ export default class Arrow {
       CONFIG
     );
 
-    const [sx, sy, cx, cy, ex, ey, ae, as, ec] = arrow;
+    const [ sx, sy, cx, cy, ex, ey, ae, as, ec ] = arrow;
     const endAngleAsDegrees = ae * (180 / Math.PI)
 
-    this.base.setAttribute('cx', sx);
-    this.base.setAttribute('cy', sy);
-
-    this.path.setAttribute('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
-    
-    this.head.setAttribute('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
+    this.base.move(sx, sy);
+    this.path.attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
+    this.head.attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
   }
 
   setEnd = to => window.requestAnimationFrame(() => {
@@ -69,9 +61,6 @@ export default class Arrow {
     this.from = from;
     this.render();
   })  
-
-  destroy = () =>
-    this.g.parentNode.removeChild(this.g);
 
 }
 

@@ -1,5 +1,6 @@
 import { SVG } from '@svgdotjs/svg.js';
 
+import Arrow from './connections/Arrow';
 import HoveredAnnotation from './hovered/HoveredAnnotation';
 
 import './NetworkCanvas.scss';
@@ -17,6 +18,7 @@ export default class NetworkCanvas {
     this.initEventHandlers();
 
     this.currentHover = null;
+    this.currentArrow = null;
   }
 
   initEventHandlers = () => {
@@ -35,10 +37,11 @@ export default class NetworkCanvas {
         this.onLeaveAnnotation(evt.target, evt.target.annotation);
     }, opts);
 
-    /*
-    document.addEventListener('mousedown', evt => {
+    document.addEventListener('mousedown', () => {
+      // Just a quick hack for now
       if (this.currentHover) {
-        this.currentArrow = new Arrow(this.currentHover.getBoundingClientRect(), this.svg);
+        this.currentArrow = new Arrow(this.currentHover);
+        this.currentArrow.addTo(this.svg);
       }
     });
 
@@ -52,7 +55,6 @@ export default class NetworkCanvas {
         });
       }
     });
-    */
   }
 
   onEnterAnnotation = (elem, annotation) => {
