@@ -31,12 +31,12 @@ export default class NetworkCanvas {
 
     document.addEventListener('mouseenter', evt => {
       if (isAnnotation(evt.target))
-        this.onEnterAnnotation(evt.target.annotation, evt.target);
+        this.onEnterAnnotation(evt);
     }, opts);
 
     document.addEventListener('mouseleave', evt => {
       if (isAnnotation(evt.target))
-        this.onLeaveAnnotation(evt.target.annotation);
+        this.onLeaveAnnotation(evt);
     }, opts);
 
     document.addEventListener('mousedown', this.onMouseDown)
@@ -49,30 +49,35 @@ export default class NetworkCanvas {
    * dragged arrow, show connection handle. If there is a dragged 
    * arrow, snap it.
    */
-  onEnterAnnotation = (annotation, elem) => {
-    const previous = this.hoverStack.length > 0 &&
+  onEnterAnnotation = evt => {
+    const element = evt.target;
+    const { annotation } = element;
+
+    const previousState = this.hoverStack.length > 0 &&
       this.hoverStack[this.hoverStack.length - 1];
 
     // Destroy previous, if any
-    if (previous)
-      previous.clearSVG();
+    if (previousState)
+      previousState.clearSVG();
 
-    const next = new HoverState(annotation, elem);
-    this.hoverStack.push(next);
+    const nextState = new HoverState(annotation, element);
+    this.hoverStack.push(nextState);
 
-    next.renderOutline(this.svg);
+    nextState.renderOutline(this.svg);
     
     if (this.currentArrow) {
-      this.currentArrow.snapTo(elem, annotation);
+      this.currentArrow.snapTo(annotation, element);
     } else {
-      // this.currentHover.renderHandle(this.svg);
+      nextState.renderHandle(this.svg, evt.clientX, evt.clientY);
     }
   }
 
   /**
    * When leaving an annotation, clear the hover if necessary.
    */
-  onLeaveAnnotation = annotation => {
+  onLeaveAnnotation = evt =>  {
+    const { annotation } = evt.target;
+
     const state = this.hoverStack.find(state => state.annotation.isEqual(annotation));
 
     if (state) {
@@ -86,6 +91,7 @@ export default class NetworkCanvas {
       if (this.hoverStack.length > 0) {
         const top = this.hoverStack[this.hoverStack.length - 1];
         top.renderOutline(this.svg);
+        top.renderHandle(this.svg);
       }
     }
   }

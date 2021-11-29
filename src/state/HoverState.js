@@ -1,5 +1,5 @@
-import { Path } from '@svgdotjs/svg.js';
-import { BooleanOperations, Point, Polygon } from '@flatten-js/core';
+import { Circle, Path } from '@svgdotjs/svg.js';
+import { BooleanOperations, Box, Point, Polygon } from '@flatten-js/core';
 
 const mergePolygons = polygons => {
 
@@ -60,8 +60,36 @@ export default class HoverState {
     return this; // Fluent method
   }
 
-  renderHandle = () => {
-    // TODO
+  renderHandle = (svg, x, y) => {
+    const box = new Box(x - 1, y - 1, x + 1, y + 1);
+
+    const [ intersecting, ] = this.faces.search(box);
+    if (intersecting) {
+      const { xmin, xmax, ymin } = intersecting.box;
+      
+      const cx = Math.round((xmin + xmax) / 2);
+      const cy = Math.round(ymin);
+
+      const circle = new Circle()
+        .radius(9)
+        .attr('cx', cx)
+        .attr('cy', cy)
+        .attr('class', 'r6o-connections-handle');
+
+      const dot = new Circle()
+        .radius(5)
+        .attr('cx', cx)
+        .attr('cy', cy)
+        .attr('class', 'r6o-connections-dot');
+
+      circle.addTo(svg);
+      dot.addTo(svg);
+
+      this.shapes.push(circle);
+      this.shapes.push(dot);
+    }
+
+    return this;
   }
 
   clearSVG = () =>

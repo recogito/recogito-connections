@@ -12,6 +12,16 @@ svg.r6o-connections-canvas {
     stroke-width:2px;
   }
 
+  .r6o-connections-handle {
+    fill:#fff;
+    stroke-width:2px;
+    stroke:#000;
+  }
+
+  .r6o-connections-dot {
+    fill:#000;
+  }
+
   g.connection-arrow {
 
     circle, polygon {
