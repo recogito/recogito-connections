@@ -1,65 +1,101 @@
 [
-  { 
+  {
     "@context": "http://www.w3.org/ns/anno.jsonld",
-    "id": "#ce0ed291-766b-4763-8e91-90ce1d04e706",
+    "id": "#1",
     "type": "Annotation",
-    "body": [{
-      "type": "TextualBody",
-      "value": "This is a comment"
-    }, {
-      "type": "TextualBody",
-      "value": "A Tag",
-      "purpose": "tagging"
-    }, {
-      "type": "TextualBody",
-      "value": "Another Tag",
-      "purpose": "tagging"
-    }],
+    "body": [
+      {
+        "type": "TextualBody",
+        "value": "Another comment"
+      }
+    ],
     "target": {
-      "selector": [{
-        "type": "TextQuoteSelector",
-        "exact": "Troy"
-      }, {
-        "type": "TextPositionSelector",
-        "start": 124,
-        "end": 128
-      }]
+      "selector": [
+        {
+          "type": "TextQuoteSelector",
+          "exact": "death in battle"
+        },
+        {
+          "type": "TextPositionSelector",
+          "start": 646,
+          "end": 661
+        }
+      ]
     }
-  }, {
+  },
+  {
+    "type": "Annotation",
+    "body": [
+      {
+        "type": "TextualBody",
+        "value": "Overlapping",
+        "purpose": "tagging"
+      }
+    ],
+    "target": {
+      "selector": [
+        {
+          "type": "TextQuoteSelector",
+          "exact": "attle or by shipwreck had got safel"
+        },
+        {
+          "type": "TextPositionSelector",
+          "start": 656,
+          "end": 691
+        }
+      ]
+    },
     "@context": "http://www.w3.org/ns/anno.jsonld",
-    "id": "#447d4bea-08dc-4bd0-ae51-31f5ed7a95a0",
+    "id": "#2"
+  },
+  {
     "type": "Annotation",
-    "body": [{
-      "type": "TextualBody",
-      "value": "Another comment"
-    }],
+    "body": [
+      {
+        "type": "TextualBody",
+        "value": "Multiline",
+        "purpose": "tagging"
+      }
+    ],
     "target": {
-      "selector": [{
-        "type": "TextQuoteSelector",
-        "exact": "death in battle"
-      }, {
-        "type": "TextPositionSelector",
-        "start": 646,
-        "end": 661
-      }]
-    }
-  }, {
+      "selector": [
+        {
+          "type": "TextQuoteSelector",
+          "exact": "he was acquainted; moreover he suffered much by sea while trying to save his own life and bring his men safely home; but do what he might he could not save his men, for they perished through their own sheer folly in eating the cattle of the Sun-god Hyperion; so the god pre"
+        },
+        {
+          "type": "TextPositionSelector",
+          "start": 213,
+          "end": 486
+        }
+      ]
+    },
     "@context": "http://www.w3.org/ns/anno.jsonld",
-    "id": "#d7197c87-b45d-4217-9c4f-27573030448f",
+    "id": "#3"
+  },
+  {
     "type": "Annotation",
-    "body": [{
-      "type": "TextualBody",
-      "value": "Comment..."
-    }],
+    "body": [
+      {
+        "type": "TextualBody",
+        "value": "Overlap",
+        "purpose": "tagging"
+      }
+    ],
     "target": {
-      "selector": [{
-        "type": "TextQuoteSelector",
-        "exact": "Ithaca"
-      }, {
-        "type": "TextPositionSelector",
-        "start": 963,
-        "end": 970
-      }]
-    }
+      "selector": [
+        {
+          "type": "TextQuoteSelector",
+          "exact": "o the god prevented them from e"
+        },
+        {
+          "type": "TextPositionSelector",
+          "start": 473,
+          "end": 504
+        }
+      ]
+    },
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "id": "#4"
   }
 ]

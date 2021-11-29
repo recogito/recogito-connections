@@ -25,8 +25,12 @@ export default class Arrow {
     this.head = this.g.polygon('0,-6 12,0, 0,6');
   }
 
-  addTo = svg => 
+  addTo = svg => {
     this.g.addTo(svg);
+
+    // Fluent method
+    return this;
+  }
 
   destroy = () =>
     this.g.remove();
@@ -52,10 +56,18 @@ export default class Arrow {
     this.head.attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
   }
 
-  setEnd = to => window.requestAnimationFrame(() => {
+  dragTo = to => window.requestAnimationFrame(() => {
     this.to = to;
     this.render();
   })
+
+  snapTo = (elem, annotation) => window.requestAnimationFrame(() => {
+
+  });
+
+  isSnapped = () => {
+
+  }
 
   setStart = from => window.requestAnimationFrame(() => {
     this.from = from;

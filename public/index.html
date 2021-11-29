@@ -56,6 +56,10 @@
         var connections = recogito.Connections();
 
         r.loadAnnotations('annotations.w3c.json');
+
+        r.on('createAnnotation', function(a) {
+          console.log(JSON.stringify(a));
+        });
       };
     </script>
   </body>
