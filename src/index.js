@@ -1,9 +1,13 @@
 import NetworkCanvas from './NetworkCanvas';
 
-const ConnectionsPlugin = config => {
+class ConnectionsPlugin {
 
-  const canvas = new NetworkCanvas();
+  constructor(instances) {
+    this.instances = Array.isArray(instances) ? instances : [ instances ];
+
+    this.canvas = new NetworkCanvas(this.instances);
+  }
 
 }
 
-export default ConnectionsPlugin;
+export default instances => new ConnectionsPlugin(instances);

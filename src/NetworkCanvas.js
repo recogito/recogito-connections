@@ -13,7 +13,10 @@ const isHandle = element =>
 
 export default class NetworkCanvas {
 
-  constructor() {
+  constructor(instances) {
+    // List of RecogitoJS/Annotorious instances
+    this.instances = instances;
+
     this.svg = SVG().addTo('body');
     this.svg.attr('class', 'r6o-connections-canvas');
 
@@ -44,7 +47,11 @@ export default class NetworkCanvas {
       }
     });
 
-    // document.addEventListener('mousedown', this.onMouseDown)
+    document.addEventListener('mousedown', () => {
+      if (this.currentArrow && this.currentArrow.isSnapped())
+        this.onCompleteConnection();
+    });
+
     document.addEventListener('mousemove', this.onMouseMove)
   }
 
@@ -125,6 +132,15 @@ export default class NetworkCanvas {
 
   onStartConnection = hoverState => {
     this.currentArrow = new Arrow(hoverState).addTo(this.svg);
+
+    // Disable selection on RecogitoJS/Annotorious
+    this.instances.forEach(i => i.disableSelect = true);
+  }
+
+  onCompleteConnection = () => {
+    // Create connection
+    document.body.classList.remove('r6o-hide-cursor');
+    this.instances.forEach(i => i.disableSelect = false);
   }
 
 }

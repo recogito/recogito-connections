@@ -87,6 +87,9 @@ export default class Arrow {
     this.render();
   });
 
+  isSnapped = () =>
+    this.end.width > 0 && this.end.height > 0;
+
 }
 
 /*

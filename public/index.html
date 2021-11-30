@@ -5,7 +5,8 @@
     <title>RecogitoJS | Development</title>
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@recogito/recogito-js@1.6.0/dist/recogito.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/@recogito/recogito-js@1.6.0/dist/recogito.min.js"></script>
+    <!-- script src="https://cdn.jsdelivr.net/npm/@recogito/recogito-js@1.6.0/dist/recogito.min.js"></script -->
+    <script src="recogito.min.js"></script>
     <style>
       html, body {
         padding:10px 20px;
@@ -53,7 +54,7 @@
           content: 'content'
         });
 
-        var connections = recogito.Connections();
+        var connections = recogito.Connections(r);
 
         r.loadAnnotations('annotations.w3c.json');
 
