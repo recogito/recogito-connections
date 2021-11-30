@@ -2,7 +2,6 @@ import { SVG } from '@svgdotjs/svg.js';
 
 import Arrow from './connections/Arrow';
 import HoverState from './state/HoverState';
-// import HoveredAnnotation from './hovered/HoveredAnnotation';
 
 import './NetworkCanvas.scss';
 
@@ -50,7 +49,6 @@ export default class NetworkCanvas {
     });
 
     document.addEventListener('mousedown', this.onMouseDown)
-
     document.addEventListener('mousemove', this.onMouseMove)
   }
 

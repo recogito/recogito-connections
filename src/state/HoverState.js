@@ -136,7 +136,7 @@ export default class HoverState {
     if (this.g)
       this.g.remove();
 
-    // TODO clear handlers!
+    this.handlers = {};
   }
 
 }
