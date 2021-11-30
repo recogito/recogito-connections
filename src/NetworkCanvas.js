@@ -35,10 +35,6 @@ export default class NetworkCanvas {
         this.onEnterAnnotation(evt);
     }, opts);
 
-    // Note: mouseleave is handled by the hover state.
-    // This way, we'll capture when the user leaves the hover
-    // element (outline, handle, etc.) and can handle
-    // cases where the user clicks the element vs. the handle.
     document.addEventListener('mouseout', evt => {
       if (isAnnotation(evt.target)) {
         // Note: entering the connection handle will also cause  a
@@ -48,13 +44,12 @@ export default class NetworkCanvas {
       }
     });
 
-    document.addEventListener('mousedown', this.onMouseDown)
+    // document.addEventListener('mousedown', this.onMouseDown)
     document.addEventListener('mousemove', this.onMouseMove)
   }
 
   initHoverEvents = hoverState => {
-    hoverState.on('selectAnnotation', () => console.log('select'));
-    hoverState.on('startConnection', () => console.log('start connection'));
+    hoverState.on('startConnection', () => this.onStartConnection(hoverState));
     hoverState.on('mouseout', () => this.onLeaveAnnotation(hoverState.annotation));
   }
 
@@ -111,29 +106,22 @@ export default class NetworkCanvas {
   }
 
   /**
-   * If there is no arrow, but a current hover: start arrow. If
-   * there is an arrow that's currently snapped: create connection.
+   * If there is a current arrow and it's not snapped, drag it to mouse position.
    */
-  onMouseDown = () => {
-    if (!this.currentArrow && this.currentHover) {
-      this.currentHover.destroy();
-      this.currentArrow = new Arrow(this.currentHover).addTo(this.svg);
-    } else if (this.currentArrow?.isSnapped()) {
-      // TODO
-      console.log('created');
+  onMouseMove = evt => {
+    if (this.currentArrow) {
+      const [ currentHover, ] = this.hoverStack;
+
+      if (currentHover) {
+        this.currentArrow.snapTo(currentHover);
+      } else {
+        // No hover - just follow the mouse
+        this.currentArrow.dragTo(evt.clientX, evt.clientY);
+      }
     }
   }
 
-  /**
-   * If there is a current arrow and it's not snapped, drag it to mouse position.
-   */
-  onMousMove = evt => {
-    if (this.currentArrow && !this.currentArrow.isSnapped()) {
-      this.currentArrow.dragTo({ 
-        x: evt.clientX,
-        y: evt.clientY
-      });
-    }
-  }
+  onStartConnection = hoverState =>
+    this.currentArrow = new Arrow(hoverState).addTo(this.svg);
 
 }

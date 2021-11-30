@@ -15,14 +15,35 @@ const CONFIG = {
 export default class Arrow {
 
   constructor(hoveredAnnotation) {
-    this.from = hoveredAnnotation.getBox();
-    this.to = { x: this.from.x, y: this.from.y, width: 0, height: 0};
+    this.start = hoveredAnnotation.getBoundingClientRect();
+    this.end = { x: this.start.x, y: this.start.y, width: 0, height: 0};
 
-    this.g = new G().attr('class', 'connection-arrow');
+    this.g = new G().attr('class', 'r6o-connections-arrow');
 
-    this.path = this.g.path();
-    this.base = this.g.circle(5);
-    this.head = this.g.polygon('0,-6 12,0, 0,6');
+    // Connection is a group with two paths (inner and outer)
+    this.connection = this.g.group()
+      .attr('class', 'r6o-connections-arrow-path');
+
+    this.connection.path()
+      .attr('class', 'r6o-connections-arrow-path-outer');
+    this.connection.path()
+      .attr('class', 'r6o-connections-arrow-path-inner');
+
+    // Base is a group with two circles (inner and outer)
+    this.base = this.g.group()
+      .attr('class', 'r6o-connections-arrow-base');
+
+    this.base.circle()
+      .radius(6)
+      .attr('class', 'r6o-connections-arrow-base-outer');
+
+    this.base.circle()
+      .radius(3)
+      .attr('class', 'r6o-connections-arrow-base-inner');
+
+    // Head is a triangle
+    this.head = this.g.polygon('0,-8 16,0, 0,8')
+      .attr('class', 'r6o-connections-arrow-head');
   }
 
   addTo = svg => {
@@ -37,42 +58,34 @@ export default class Arrow {
 
   render = () => {
     const arrow = getBoxToBoxArrow(
-      this.from.x,
-      this.from.y,
-      this.from.width,
-      this.from.height,
-      this.to.x,
-      this.to.y,
-      this.to.width,
-      this.to.height,
+      this.start.x,
+      this.start.y,
+      this.start.width,
+      this.start.height,
+      this.end.x,
+      this.end.y,
+      this.end.width,
+      this.end.height,
       CONFIG
     );
 
-    const [ sx, sy, cx, cy, ex, ey, ae, as, ec ] = arrow;
+    const [ sx, sy, cx, cy, ex, ey, ae, ] = arrow;
     const endAngleAsDegrees = ae * (180 / Math.PI)
 
-    this.base.move(sx, sy);
-    this.path.attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
+    this.base.find('circle').attr('cx', sx).attr('cy', sy);
+    this.connection.find('path').attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
     this.head.attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
   }
 
-  dragTo = to => window.requestAnimationFrame(() => {
-    this.to = to;
+  dragTo = (x, y) => window.requestAnimationFrame(() => {
+    this.end = { x, y, width: 0, height: 0 };
     this.render();
-  })
-
-  snapTo = (elem, annotation) => window.requestAnimationFrame(() => {
-
   });
 
-  isSnapped = () => {
-
-  }
-
-  setStart = from => window.requestAnimationFrame(() => {
-    this.from = from;
+  snapTo = hoverState => window.requestAnimationFrame(() => {
+    this.end = hoverState.element.getBoundingClientRect();
     this.render();
-  })  
+  });
 
 }
 

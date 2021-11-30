@@ -51,6 +51,11 @@ export default class HoverState {
     this.handlers = {};
   }
 
+  getBoundingClientRect= () => {
+    // TODO return the bounds of the multipolygon face under the mousey
+    return this.element.getBoundingClientRect();
+  }
+
   /** Lazily returns the SVG group */
   getContainer = svg => {
     if (!this.g) {
@@ -82,9 +87,6 @@ export default class HoverState {
       .attr('d', this.faces.svg());
 
     path.addTo(container);
-
-    // Clicking the path element should select the annotation
-    path.click(() => this.fireEvent('selectAnnotation'));
 
     return this; // Fluent method
   }
