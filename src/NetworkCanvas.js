@@ -56,7 +56,13 @@ export default class NetworkCanvas extends EventEmitter {
         this.onCompleteConnection();
     });
 
-    document.addEventListener('mousemove', this.onMouseMove)
+    document.addEventListener('mousemove', this.onMouseMove);
+
+    document.addEventListener('keyup', evt => {
+      // Escape
+      if (evt.which === 27 && this.currentArrow)
+        this.onCancelConnection(); 
+    })
   }
 
   initHoverEvents = hoverState => {
@@ -145,6 +151,15 @@ export default class NetworkCanvas extends EventEmitter {
     // Create connection
     this.emit('createConnection', this.currentArrow.toAnnotation().underlying);
 
+    this.currentArrow.destroy();
+    this.currentArrow = null;
+
+    setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
+
+    document.body.classList.remove('r6o-hide-cursor');
+  }
+
+  onCancelConnection = () => {
     this.currentArrow.destroy();
     this.currentArrow = null;
 
