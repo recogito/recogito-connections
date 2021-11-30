@@ -61,6 +61,14 @@ export default class Arrow {
 
   destroy = () =>
     this.g.remove();
+  
+    dragTo = (x, y) => window.requestAnimationFrame(() => {
+    this.end = { x, y, width: 0, height: 0 };
+    this.render();
+  });
+
+  isSnapped = () =>
+    this.end.width > 0 && this.end.height > 0;
 
   render = () => {
     const arrow = getBoxToBoxArrow(
@@ -83,11 +91,6 @@ export default class Arrow {
     this.head.attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
   }
 
-  dragTo = (x, y) => window.requestAnimationFrame(() => {
-    this.end = { x, y, width: 0, height: 0 };
-    this.render();
-  });
-
   snapTo = hoverState => window.requestAnimationFrame(() => {
     const { x, y, width, height } = hoverState.getBoundingClientRect();
 
@@ -98,9 +101,6 @@ export default class Arrow {
 
     this.render();
   });
-
-  isSnapped = () =>
-    this.end.width > 0 && this.end.height > 0;
 
   toAnnotation = () => WebAnnotation.create({
     target: [

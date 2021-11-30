@@ -10,7 +10,7 @@ const isAnnotation = element =>
   element.classList?.contains('r6o-annotation');
 
 const isHandle = element =>
-  element.closest && element.closest('.r6o-connections-handle');
+  element?.closest && element.closest('.r6o-connections-handle');
 
 export default class NetworkCanvas extends EventEmitter {
 
@@ -25,6 +25,7 @@ export default class NetworkCanvas extends EventEmitter {
 
     this.initGlobalEvents();
 
+    // TODO I think after switching from mouseenter to mouseover, we don't need this anymore!
     this.hoverStack = [];
 
     this.currentArrow = null;
@@ -144,8 +145,12 @@ export default class NetworkCanvas extends EventEmitter {
     // Create connection
     this.emit('createConnection', this.currentArrow.toAnnotation().underlying);
 
+    this.currentArrow.destroy();
+    this.currentArrow = null;
+
+    setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
+
     document.body.classList.remove('r6o-hide-cursor');
-    this.instances.forEach(i => i.disableSelect = false);
   }
 
 }
