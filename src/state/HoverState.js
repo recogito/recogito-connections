@@ -1,8 +1,8 @@
-import { Circle, Path } from '@svgdotjs/svg.js';
+import { Circle, G, Path } from '@svgdotjs/svg.js';
 import { BooleanOperations, Box, Point, Polygon } from '@flatten-js/core';
 
+/** Helper to merge N (multi-)polygons into one **/
 const mergePolygons = polygons => {
-
   const [ first, ...rest ] = polygons;
 
   return rest.reduce((merged, next) => {
@@ -44,55 +44,99 @@ export default class HoverState {
       ]); 
     })).faces;
 
-    // Rendered SVG shapes
-    this.shapes = [];
+    // Rendered SVG group
+    this.g = null;
+
+    // Registered event handlers
+    this.handlers = {};
+  }
+
+  /** Lazily returns the SVG group */
+  getContainer = svg => {
+    if (!this.g) {
+      this.g = new G().attr('class', 'r6o-connections-hover').addTo(svg);
+      this.g.mouseout(() => this.fireEvent('mouseout'));
+    }
+
+    return this.g;
+  }
+
+  on = (event, handler) => {
+    if (this.handlers[event])
+      this.handlers[event].push(handler);
+    else
+      this.handlers[event] = [ handler ];
+  }
+
+  /** Shorthand **/
+  fireEvent = event => {
+    const handlers = this.handlers[event] || [];
+    handlers.forEach(fn => fn(this.annotation, this.element));
   }
 
   renderOutline = svg => {
+    const container = this.getContainer(svg);
+
     const path = new Path()
       .attr('class', 'r6o-connections-hover')
       .attr('d', this.faces.svg());
 
-    path.addTo(svg);
+    path.addTo(container);
 
-    this.shapes.push(path);
+    // Clicking the path element should select the annotation
+    path.click(() => this.fireEvent('selectAnnotation'));
 
     return this; // Fluent method
   }
 
   renderHandle = (svg, x, y) => {
+    const container = this.getContainer(svg);
+
+    // From the multipolygon, find the face that's currently
+    // under the mouse poiner
     const box = new Box(x - 1, y - 1, x + 1, y + 1);
 
     const [ intersecting, ] = this.faces.search(box);
     if (intersecting) {
+      // Place handle top/middle of the multipolygon face
+      // under the mouse
       const { xmin, xmax, ymin } = intersecting.box;
       
       const cx = Math.round((xmin + xmax) / 2);
       const cy = Math.round(ymin);
 
-      const circle = new Circle()
+      const g = new G()
+        .attr('class', 'r6o-connections-handle')
+        .addTo(container);
+
+      // Outer circle
+      new Circle()
         .radius(9)
         .attr('cx', cx)
         .attr('cy', cy)
-        .attr('class', 'r6o-connections-handle');
+        .attr('class', 'r6o-connections-handle-outer')
+        .addTo(g);
 
-      const dot = new Circle()
+      // Inner dot
+      new Circle()
         .radius(5)
         .attr('cx', cx)
         .attr('cy', cy)
-        .attr('class', 'r6o-connections-dot');
+        .attr('class', 'r6o-connections-handle-inner')
+        .addTo(g);
 
-      circle.addTo(svg);
-      dot.addTo(svg);
-
-      this.shapes.push(circle);
-      this.shapes.push(dot);
+      // Mousedown on the handle should start connecting
+      g.mousedown(() => this.fireEvent('startConnection'));
     }
 
     return this;
   }
 
-  clearSVG = () =>
-    this.shapes.forEach(s => s.remove());
+  clearSVG = () => {
+    if (this.g)
+      this.g.remove();
+
+    // TODO clear handlers!
+  }
 
 }

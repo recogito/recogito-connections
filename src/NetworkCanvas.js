@@ -6,9 +6,11 @@ import HoverState from './state/HoverState';
 
 import './NetworkCanvas.scss';
 
-// To be extended...
 const isAnnotation = element =>
   element.classList?.contains('r6o-annotation');
+
+const isHandle = element =>
+  element.closest && element.closest('.r6o-connections-handle');
 
 export default class NetworkCanvas {
 
@@ -16,32 +18,46 @@ export default class NetworkCanvas {
     this.svg = SVG().addTo('body');
     this.svg.attr('class', 'r6o-connections-canvas');
 
-    this.initEventHandlers();
+    this.initGlobalEvents();
 
     this.hoverStack = [];
 
     this.currentArrow = null;
   }
 
-  initEventHandlers = () => {
+  initGlobalEvents = () => {
     const opts = {
       capture: true,
       passive: true
     }
 
-    document.addEventListener('mouseenter', evt => {
+    document.addEventListener('mouseover', evt => {
       if (isAnnotation(evt.target))
         this.onEnterAnnotation(evt);
     }, opts);
 
-    document.addEventListener('mouseleave', evt => {
-      if (isAnnotation(evt.target))
-        this.onLeaveAnnotation(evt);
-    }, opts);
+    // Note: mouseleave is handled by the hover state.
+    // This way, we'll capture when the user leaves the hover
+    // element (outline, handle, etc.) and can handle
+    // cases where the user clicks the element vs. the handle.
+    document.addEventListener('mouseout', evt => {
+      if (isAnnotation(evt.target)) {
+        // Note: entering the connection handle will also cause  a
+        // mouseleave event for the annotation!
+        if (!isHandle(evt.relatedTarget))
+          this.onLeaveAnnotation(evt.target.annotation); 
+      }
+    });
 
     document.addEventListener('mousedown', this.onMouseDown)
 
     document.addEventListener('mousemove', this.onMouseMove)
+  }
+
+  initHoverEvents = hoverState => {
+    hoverState.on('selectAnnotation', () => console.log('select'));
+    hoverState.on('startConnection', () => console.log('start connection'));
+    hoverState.on('mouseout', () => this.onLeaveAnnotation(hoverState.annotation));
   }
 
   /**
@@ -61,6 +77,7 @@ export default class NetworkCanvas {
       previousState.clearSVG();
 
     const nextState = new HoverState(annotation, element);
+    this.initHoverEvents(nextState);
     this.hoverStack.push(nextState);
 
     nextState.renderOutline(this.svg);
@@ -75,9 +92,7 @@ export default class NetworkCanvas {
   /**
    * When leaving an annotation, clear the hover if necessary.
    */
-  onLeaveAnnotation = evt =>  {
-    const { annotation } = evt.target;
-
+  onLeaveAnnotation = annotation =>  {
     const state = this.hoverStack.find(state => state.annotation.isEqual(annotation));
 
     if (state) {
@@ -89,9 +104,10 @@ export default class NetworkCanvas {
 
       // Render previous state, if any
       if (this.hoverStack.length > 0) {
-        const top = this.hoverStack[this.hoverStack.length - 1];
-        top.renderOutline(this.svg);
-        top.renderHandle(this.svg);
+        const topState = this.hoverStack[this.hoverStack.length - 1];
+        this.initHoverEvents(topState);
+        topState.renderOutline(this.svg);
+        topState.renderHandle(this.svg);
       }
     }
   }

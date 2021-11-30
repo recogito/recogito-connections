@@ -10,16 +10,24 @@ svg.r6o-connections-canvas {
     fill:transparent;
     stroke:#000;
     stroke-width:2px;
+    cursor:pointer;
   }
 
   .r6o-connections-handle {
-    fill:#fff;
-    stroke-width:2px;
-    stroke:#000;
-  }
+    pointer-events:auto;
+    cursor:crosshair;
 
-  .r6o-connections-dot {
-    fill:#000;
+    .r6o-connections-handle-outer {
+      fill:#fff;
+      stroke-width:2px;
+      stroke:#000;
+      pointer-events:auto;
+    }
+
+    .r6o-connections-handle-inner {
+      fill:#000;
+    }
+
   }
 
   g.connection-arrow {
