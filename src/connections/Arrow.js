@@ -15,7 +15,13 @@ const CONFIG = {
 export default class Arrow {
 
   constructor(hoveredAnnotation) {
-    this.start = hoveredAnnotation.getBoundingClientRect();
+    const { x, y, width, height } = hoveredAnnotation.getBoundingClientRect();
+
+    this.start = {
+      annotation: hoveredAnnotation.annotation,
+      x, y, width, height  
+    };
+
     this.end = { x: this.start.x, y: this.start.y, width: 0, height: 0};
 
     this.g = new G().attr('class', 'r6o-connections-arrow');
@@ -83,7 +89,13 @@ export default class Arrow {
   });
 
   snapTo = hoverState => window.requestAnimationFrame(() => {
-    this.end = hoverState.getBoundingClientRect();
+    const { x, y, width, height } = hoverState.getBoundingClientRect();
+
+    this.end = {
+      annotation: hoverState.annotation,
+      x, y, width, height
+    };
+
     this.render();
   });
 
@@ -91,9 +103,10 @@ export default class Arrow {
     this.end.width > 0 && this.end.height > 0;
 
   toAnnotation = () => WebAnnotation.create({
-    target: []
-    //  { id: from.id },
-    //  { id: to.id }
+    target: [
+      { id: this.start.annotation.id },
+      { id: this.end.annotation.id }
+    ]
   });
 
 }
