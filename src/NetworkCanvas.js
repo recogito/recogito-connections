@@ -1,4 +1,5 @@
 import { SVG } from '@svgdotjs/svg.js';
+import EventEmitter from 'tiny-emitter';
 
 import Arrow from './connections/Arrow';
 import HoverState from './state/HoverState';
@@ -11,9 +12,11 @@ const isAnnotation = element =>
 const isHandle = element =>
   element.closest && element.closest('.r6o-connections-handle');
 
-export default class NetworkCanvas {
+export default class NetworkCanvas extends EventEmitter {
 
   constructor(instances) {
+    super();
+
     // List of RecogitoJS/Annotorious instances
     this.instances = instances;
 
@@ -83,7 +86,7 @@ export default class NetworkCanvas {
     nextState.renderOutline(this.svg);
     
     if (this.currentArrow) {
-      this.currentArrow.snapTo(annotation, element);
+      this.currentArrow.snapTo(nextState);
     } else {
       nextState.renderHandle(this.svg, evt.clientX, evt.clientY);
     }
@@ -139,6 +142,8 @@ export default class NetworkCanvas {
 
   onCompleteConnection = () => {
     // Create connection
+    this.emit('createConnection', this.currentArrow.toAnnotation().underlying);
+
     document.body.classList.remove('r6o-hide-cursor');
     this.instances.forEach(i => i.disableSelect = false);
   }

@@ -1,5 +1,6 @@
 import { G } from '@svgdotjs/svg.js';
 import { getBoxToBoxArrow } from 'perfect-arrows';
+import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
 
 const CONFIG = {
   bow: 0,
@@ -8,7 +9,6 @@ const CONFIG = {
   stretchMax: 420,
   padStart: 0,
   padEnd: 6,
-  flip: true,
   straights: false,
 };
 
@@ -83,12 +83,18 @@ export default class Arrow {
   });
 
   snapTo = hoverState => window.requestAnimationFrame(() => {
-    this.end = hoverState.element.getBoundingClientRect();
+    this.end = hoverState.getBoundingClientRect();
     this.render();
   });
 
   isSnapped = () =>
     this.end.width > 0 && this.end.height > 0;
+
+  toAnnotation = () => WebAnnotation.create({
+    target: []
+    //  { id: from.id },
+    //  { id: to.id }
+  });
 
 }
 

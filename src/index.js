@@ -8,6 +8,12 @@ class ConnectionsPlugin {
     this.canvas = new NetworkCanvas(this.instances);
   }
 
+  on = (event, handler) => this.canvas.on(event, handler);
+
+  off = (event, handler) => this.canvas.off(event, handler);
+
+  once = (event, handler) => this.canvas.once(event, handler);
+
 }
 
 export default instances => new ConnectionsPlugin(instances);
