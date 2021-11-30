@@ -1,3 +1,11 @@
+body.r6o-hide-cursor {
+
+  * {
+    cursor:none !important;
+  }
+  
+}
+
 svg.r6o-connections-canvas {
   position:fixed;
   top:0;

@@ -7,7 +7,7 @@ const CONFIG = {
   stretchMin: 40,
   stretchMax: 420,
   padStart: 0,
-  padEnd: 10,
+  padEnd: 6,
   flip: true,
   straights: false,
 };

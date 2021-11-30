@@ -114,14 +114,17 @@ export default class NetworkCanvas {
 
       if (currentHover) {
         this.currentArrow.snapTo(currentHover);
+        document.body.classList.remove('r6o-hide-cursor');
       } else {
         // No hover - just follow the mouse
         this.currentArrow.dragTo(evt.clientX, evt.clientY);
+        document.body.classList.add('r6o-hide-cursor');
       }
     }
   }
 
-  onStartConnection = hoverState =>
+  onStartConnection = hoverState => {
     this.currentArrow = new Arrow(hoverState).addTo(this.svg);
+  }
 
 }
