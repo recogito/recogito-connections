@@ -152,11 +152,9 @@ export default class NetworkCanvas extends EventEmitter {
 
     this.emit('createConnection', annotation.underlying);
     
-    /*
     setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
 
     document.body.classList.remove('r6o-hide-cursor');
-    */
 
     this.currentFloatingEdge.destroy();
     this.currentFloatingEdge = null;
