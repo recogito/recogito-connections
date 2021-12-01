@@ -1,6 +1,6 @@
 import { getBoxToBoxArrow } from 'perfect-arrows';
 
-import { ARROW_CONFIG } from '../Geom';
+import { ARROW_CONFIG } from './SVGEdge';
 
 /**
  * A compound SVG shape representing a network edge currently being 

@@ -9,9 +9,11 @@ import SVGHoveredNode from './svg/SVGHoveredNode';
 
 import './NetworkCanvas.scss';
 
+/** Checks if the given DOM element represents an annotation **/
 const isAnnotation = element =>
   element.classList?.contains('r6o-annotation');
 
+/** Checks if the given DOM element is a connection handle **/
 const isHandle = element =>
   element?.closest && element.closest('.r6o-connections-handle');
 
@@ -28,7 +30,6 @@ export default class NetworkCanvas extends EventEmitter {
 
     this.initGlobalEvents();
 
-    // TODO initial load?
     this.connections = [];
 
     // Current hover highlight
@@ -175,5 +176,13 @@ export default class NetworkCanvas extends EventEmitter {
 
     this.connections.forEach(connection => connection.redraw());
   }
+
+  setAnnotations = annotations => annotations.forEach(a => {
+    const start = NetworkNode.findById(a.targets[0].id);
+    const end = NetworkNode.findById(a.targets[1].id);
+
+    const edge = new NetworkEdge(start, end);
+    this.connections.push(new SVGEdge(edge, this.svg));
+  });
 
 }

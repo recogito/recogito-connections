@@ -2,19 +2,48 @@ import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
 
 import NetworkCanvas from './NetworkCanvas';
 
+/** Checks if the given annotation represents a connection **/
+const isConnection = annotation => {
+  const { targets } = annotation;
+
+  if (targets.length !== 2)
+    return false;
+
+  return targets.every(t => t.id);
+}
+
 class ConnectionsPlugin {
 
   constructor(instances) {
     this.instances = Array.isArray(instances) ? instances : [ instances ];
 
+    // Monkey-patches the .setAnnotations method of each instance
+    // with an interceptor
+    const patchSetAnnotations = instance => {
+      const _setAnnotations = instance.setAnnotations;
+
+      instance.setAnnotations = arg => {
+        // Set annotations on instance first
+        _setAnnotations(arg);
+
+        // Then create relations
+        const annotations = arg || []; // Allow null arg
+  
+        const connections = annotations
+          .map(a => new WebAnnotation(a))
+          .filter(isConnection);
+    
+        // TODO Hack! Until the external API returns a promise we can
+        // use to get notified of rendering complete
+        window.setTimeout(() =>
+          this.canvas.setAnnotations(connections), 200);  
+      }
+    }
+
+    this.instances.forEach(i => patchSetAnnotations(i));
+
     this.canvas = new NetworkCanvas(this.instances);
   }
-
-  loadAnnotations = url => fetch(url)
-    .then(response => response.json()).then(annotations => {
-      this.setAnnotations(annotations);
-      return annotations;
-    });
 
   on = (event, handler) =>
     this.canvas.on(event, handler);
@@ -24,12 +53,6 @@ class ConnectionsPlugin {
 
   once = (event, handler) =>
     this.canvas.once(event, handler);
-
-  setAnnotations = arg => {
-    const annotations = arg || []; // Allow null arg
-    const webannotations = annotations.map(a => new WebAnnotation(a));
-    this.canvas.setAnnotations(webannotations);
-  }
 
 }
 

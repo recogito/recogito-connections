@@ -97,5 +97,19 @@
     },
     "@context": "http://www.w3.org/ns/anno.jsonld",
     "id": "#4"
+  },
+  {
+    "@context": "http://www.w3.org/ns/anno.jsonld",
+    "type": "Annotation",
+    "id": "#570a0a77-28d2-4c05-ab5f-5a098df52f5e",
+    "body": [],
+    "target": [
+      {
+        "id": "#1"
+      },
+      {
+        "id": "#4"
+      }
+    ]
   }
 ]

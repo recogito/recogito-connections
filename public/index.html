@@ -57,7 +57,7 @@
         var connections = recogito.Connections(r);
 
         connections.on('createConnection', function(c) {
-          console.log('created', c);
+          console.log('created', JSON.stringify(c));
         });
 
         r.on('createAnnotation', function(a) {

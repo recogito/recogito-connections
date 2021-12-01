@@ -1,6 +1,15 @@
 import { getBoxToBoxArrow } from 'perfect-arrows';
 
-import { ARROW_CONFIG } from '../Geom';
+export const ARROW_CONFIG = {
+  bow: 0,
+  stretch: 0.3,
+  stretchMin: 40,
+  stretchMax: 420,
+  padStart: 0,
+  padEnd: 6,
+  straights: false,
+  flip: true
+};
 
 /**
  * A compound SVG shape representing an existing network 

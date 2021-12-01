@@ -1,5 +1,24 @@
-import { Box, Point, Polygon } from '@flatten-js/core';
-import { getFaceBounds, mergePolygons } from './Geom';
+import { BooleanOperations, Box, Point, Polygon } from '@flatten-js/core';
+
+/** Returns the bounding box of the given polygon face **/
+const getFaceBounds = face => {
+  const { xmin, ymin, xmax, ymax } = face.box;
+  return {
+    x: xmin,
+    y: ymin,
+    width: xmax - xmin,
+    height: ymax - ymin
+  };
+}
+
+/**  Merges N (multi-)polygons into one **/
+const mergePolygons = polygons => {
+  const [ first, ...rest ] = polygons;
+
+  return rest.reduce((merged, next) => {
+    return BooleanOperations.unify(merged, next);
+  }, first);
+}
 
 /**
  * A utility abstraction - encapsulates an annotation
@@ -86,4 +105,11 @@ export default class NetworkNode {
     }
   }
 
+}
+
+NetworkNode.findById = id => {
+  const annotation = document.querySelector(`*[data-id="${id}"]`)?.annotation;
+
+  if (annotation)
+    return new NetworkNode(annotation);
 }
