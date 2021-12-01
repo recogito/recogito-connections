@@ -44,10 +44,13 @@ svg.r6o-connections-canvas {
     stroke-width:3px;
   }
 
-  .r6o-connections-float{
+  .r6o-connections-edge,
+  .r6o-connections-float {
 
+    .r6o-connections-edge-path,
     .r6o-connections-float-path {
 
+      .r6o-connections-edge-path-inner,
       .r6o-connections-float-path-inner {
         fill:none;
         stroke:#000;
@@ -55,6 +58,7 @@ svg.r6o-connections-canvas {
         stroke-dasharray:6 3;
       }
 
+      .r6o-connections-edge-path-outer,
       .r6o-connections-float-path-outer {
         fill:none;
         stroke:rgba(255, 255, 255, 0.7);
@@ -62,6 +66,26 @@ svg.r6o-connections-canvas {
       }
 
     }
+
+    .r6o-connections-edge-head,
+    .r6o-connections-float-head {
+      fill:#000;
+      stroke:rgba(255, 255, 255, 0.7);
+      stroke-width:2px;
+    }
+  
+  }
+
+  .r6o-connections-edge {
+
+    .r6o-connections-edge-base {
+      fill:#000;
+      stroke-width:0;
+    }
+
+  }
+
+  .r6o-connections-float {
 
     .r6o-connections-float-base {
 
@@ -76,12 +100,6 @@ svg.r6o-connections-canvas {
         fill:#000;
       }
 
-    }
-
-    .r6o-connections-float-head {
-      fill:#000;
-      stroke:rgba(255, 255, 255, 0.7);
-      stroke-width:2px;
     }
 
   }

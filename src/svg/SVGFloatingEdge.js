@@ -1,5 +1,4 @@
 import { getBoxToBoxArrow } from 'perfect-arrows';
-import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
 
 import { ARROW_CONFIG } from '../Geom';
 
@@ -63,7 +62,7 @@ export default class SVGFloatingEdge {
       const start = this.start.getBoundingClientRect();
       const end = this.end.annotation ? this.end.getBoundingClientRect() : this.end;
 
-      const arrow = getBoxToBoxArrow(
+      const [ sx, sy, cx, cy, ex, ey, ae, ] = getBoxToBoxArrow(
         start.x,
         start.y,
         start.width,
@@ -75,7 +74,6 @@ export default class SVGFloatingEdge {
         ARROW_CONFIG
       );
 
-      const [ sx, sy, cx, cy, ex, ey, ae, ] = arrow;
       const endAngleAsDegrees = ae * (180 / Math.PI);
 
       // Base circles
@@ -97,12 +95,5 @@ export default class SVGFloatingEdge {
     this.end = node;
     this.redraw();
   }
-
-  toAnnotation = () => WebAnnotation.create({
-    target: [
-      { id: this.start.annotation.id },
-      { id: this.end?.annotation?.id }
-    ]
-  });
 
 }

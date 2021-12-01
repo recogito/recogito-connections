@@ -1,3 +1,7 @@
+import { getBoxToBoxArrow } from 'perfect-arrows';
+
+import { ARROW_CONFIG } from '../Geom';
+
 /**
  * A compound SVG shape representing an existing network 
  * edge between two nodes.
@@ -5,35 +9,64 @@
 export default class SVGEdge {
 
   constructor(edge, svg) {
-    this.edge;
+    this.edge = edge;
 
-    this.connection = this.g.group()
-      .attr('class', 'r6o-connections-arrow-path');
+    this.g = svg.group()
+      .attr('class', 'r6o-connections-edge');
 
-    this.connection.path()
-      .attr('class', 'r6o-connections-arrow-path-outer');
-    this.connection.path()
-      .attr('class', 'r6o-connections-arrow-path-inner');
+    // Edge path
+    const svgEdge = this.g.group()
+      .attr('class', 'r6o-connections-edge-path');
 
-    // Base is a group with two circles (inner and outer)
-    this.base = this.g.group()
-      .attr('class', 'r6o-connections-arrow-base');
+    svgEdge.path()
+      .attr('class', 'r6o-connections-edge-path-outer');
 
-    this.base.circle()
-      .radius(6)
-      .attr('class', 'r6o-connections-arrow-base-outer');
+    svgEdge.path()
+      .attr('class', 'r6o-connections-edge-path-inner');
 
-    this.base.circle()
+    // Edge base is a single circles
+    this.g.circle()
       .radius(3)
-      .attr('class', 'r6o-connections-arrow-base-inner');
+      .attr('class', 'r6o-connections-edge-base');
 
-    // Head is a triangle
-    this.head = this.g.polygon('0,-8 16,0, 0,8')
-      .attr('class', 'r6o-connections-arrow-head');
+    // Edge head is a triangle
+    this.g.polygon('0,-6 12,0, 0,6')
+      .attr('class', 'r6o-connections-edge-head');
+
+    // Initial render
+    this.redraw();
   }
 
   redraw = () => {
+    const start = this.edge.start.getBoundingClientRect();
+    const end = this.edge.end.getBoundingClientRect();
 
+    const [ sx, sy, cx, cy, ex, ey, ae, ] = getBoxToBoxArrow(
+      start.x,
+      start.y,
+      start.width,
+      start.height,
+      end.x,
+      end.y,
+      end.width || 0,
+      end.height || 0,
+      ARROW_CONFIG
+    );
+
+    const endAngleAsDegrees = ae * (180 / Math.PI);
+
+    // Base circle
+    this.g.find('circle')
+      .attr('cx', sx)
+      .attr('cy', sy);
+
+    // Inner and outer paths
+    this.g.find('path')
+      .attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
+
+    // Arrow head
+    this.g.find('polygon')
+      .attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
   }
 
 }

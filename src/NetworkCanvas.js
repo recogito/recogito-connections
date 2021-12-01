@@ -2,10 +2,12 @@ import { SVG } from '@svgdotjs/svg.js';
 import EventEmitter from 'tiny-emitter';
 
 import NetworkNode from './NetworkNode';
-import SVGHoveredNode from './svg/SVGHoveredNode';
+import SVGEdge from './svg/SVGEdge';
 import SVGFloatingEdge from './svg/SVGFloatingEdge';
+import SVGHoveredNode from './svg/SVGHoveredNode';
 
 import './NetworkCanvas.scss';
+import NetworkEdge from './NetworkEdge';
 
 const isAnnotation = element =>
   element.classList?.contains('r6o-annotation');
@@ -140,18 +142,17 @@ export default class NetworkCanvas extends EventEmitter {
    * connection body payload.
    */
   onCompleteConnection = () => {
-    const { start, end } = this.currentFloatingEdge;    
-    const annotation = this.currentFloatingEdge.toAnnotation();
+    const { start, end } = this.currentFloatingEdge;
+
+    const edge = new NetworkEdge(start, end);
+
+    const annotation = edge.toAnnotation();
+
+    this.connections.push(new SVGEdge(edge, this.svg));
 
     this.emit('createConnection', annotation.underlying);
-
-    // TODO should become a NetworkConnection object, once we incorporate 
-    // editor payload.
-    this.connections.push({ start, end });
     
     /*
-    this.drawEdge(edge);
-
     setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
 
     document.body.classList.remove('r6o-hide-cursor');
@@ -160,23 +161,6 @@ export default class NetworkCanvas extends EventEmitter {
     this.currentFloatingEdge.destroy();
     this.currentFloatingEdge = null;
   }
-
-  /*
-  drawEdge = edge => {
-    const [ sx, sy, cx, cy, ex, ey, ae, ] = edge.arrow();
-
-    const path = new Path()
-      .attr('class', 'r6o-connections-network-edge')
-      .attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`)
-      .addTo(this.svg);
-    //this.head.attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
-
-    this.connections.push({
-      edge, svg: path
-    });
-
-  }
-  */
 
   onCancelConnection = () => {
     this.currentFloatingEdge.destroy();
@@ -191,13 +175,7 @@ export default class NetworkCanvas extends EventEmitter {
     if (this.currentHover)
       this.currentHover.redraw();
 
-    /*
-    this.connections.forEach(connection => {
-      const { edge, svg } = connection;
-      const [ sx, sy, cx, cy, ex, ey, ae, ] = edge.arrow();
-      svg.attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
-    });
-    */
+    this.connections.forEach(connection => connection.redraw());
   }
 
 }
