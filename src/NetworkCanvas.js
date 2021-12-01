@@ -64,7 +64,7 @@ export default class NetworkCanvas extends EventEmitter {
     document.addEventListener('mousemove', this.onMouseMove);
 
     document.addEventListener('keyup', evt => {
-      if (evt.code === 27 && this.currentArrow) // Escape
+      if (evt.code === 'Escape' && this.currentFloatingEdge)
         this.onCancelConnection(); 
     });
 
@@ -135,32 +135,30 @@ export default class NetworkCanvas extends EventEmitter {
     this.instances.forEach(i => i.disableSelect = true);
   }
 
+  /**
+   * TODO we still need to incorporate an editor for the 
+   * connection body payload.
+   */
   onCompleteConnection = () => {
-    console.log('done');
+    const { start, end } = this.currentFloatingEdge;    
+    const annotation = this.currentFloatingEdge.toAnnotation();
+
+    this.emit('createConnection', annotation.underlying);
+
+    // TODO should become a NetworkConnection object, once we incorporate 
+    // editor payload.
+    this.connections.push({ start, end });
+    
     /*
-    // Create connection
-    this.emit('createConnection', this.currentArrow.toAnnotation().underlying);
-
-
-    // Debugging stuff...
-    const fromNode = new NetworkNode(
-      this.currentArrow.start.annotation
-    );
-
-    const toNode = new NetworkNode(
-      this.currentArrow.end.annotation
-    );
-
-    const edge = new NetworkEdge(fromNode, toNode);
     this.drawEdge(edge);
-
-    this.currentArrow.destroy();
-    this.currentArrow = null;
 
     setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
 
     document.body.classList.remove('r6o-hide-cursor');
     */
+
+    this.currentFloatingEdge.destroy();
+    this.currentFloatingEdge = null;
   }
 
   /*
@@ -180,16 +178,14 @@ export default class NetworkCanvas extends EventEmitter {
   }
   */
 
-  /*
   onCancelConnection = () => {
-    this.currentArrow.destroy();
-    this.currentArrow = null;
+    this.currentFloatingEdge.destroy();
+    this.currentFloatingEdge = null;
 
-    setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
+    this.instances.forEach(i => i.disableSelect = false);
 
     document.body.classList.remove('r6o-hide-cursor');
   }
-  */
 
   redraw = () => {
     if (this.currentHover)
