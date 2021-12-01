@@ -28,6 +28,9 @@ export default class NetworkCanvas extends EventEmitter {
 
     this.initGlobalEvents();
 
+    // TODO initial load?
+    this.connections = [];
+
     // Current hover highlight
     this.currentHover = null;
 
@@ -113,11 +116,9 @@ export default class NetworkCanvas extends EventEmitter {
     this.currentHover = null;
   }
 
-  /**
-   * If there is a current floating edge and it's not snapped, 
-   * drag it to mouse position.
-   */
   onMouseMove = evt => {
+    // If there is a current floating edge and it's not snapped, 
+    // drag it to mouse position
     if (this.currentFloatingEdge) {
       if (this.currentHover) {
         document.body.classList.remove('r6o-hide-cursor');
