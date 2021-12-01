@@ -78,4 +78,7 @@ export default class SVGEdge {
       .attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
   }
 
+  remove = () => 
+    this.g.remove();
+
 }

@@ -19,7 +19,7 @@ class ConnectionsPlugin {
 
     // Monkey-patches the .setAnnotations method of each instance
     // with an interceptor
-    const patchSetAnnotations = instance => {
+    const patchInstances = instance => {
       const _setAnnotations = instance.setAnnotations;
 
       instance.setAnnotations = arg => {
@@ -38,9 +38,12 @@ class ConnectionsPlugin {
         window.setTimeout(() =>
           this.canvas.setAnnotations(connections), 200);  
       }
+
+      instance.on('deleteAnnotation', annotation =>
+        this.canvas.deleteConnectionsForId(annotation.id));
     }
 
-    this.instances.forEach(i => patchSetAnnotations(i));
+    this.instances.forEach(i => patchInstances(i));
 
     this.canvas = new NetworkCanvas(this.instances);
   }

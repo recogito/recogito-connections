@@ -39,6 +39,23 @@ export default class NetworkCanvas extends EventEmitter {
     this.currentFloatingEdge = null;
   }
 
+  /** 
+   * Deletes all connections connected to the annotation
+   * with the given ID.
+   */
+  deleteConnectionsForId = id => {
+    this.connections = this.connections.filter(conn => {
+      const start = conn.edge.start.annotation.id;
+      const end = conn.edge.end.annotation.id;
+
+      const toDelete = start === id || end === id;
+      if (toDelete)
+        conn.remove();
+
+      return !toDelete;
+    });
+  }
+
   initGlobalEvents = () => {
     const opts = {
       capture: true,
@@ -157,12 +174,12 @@ export default class NetworkCanvas extends EventEmitter {
 
     document.body.classList.remove('r6o-hide-cursor');
 
-    this.currentFloatingEdge.destroy();
+    this.currentFloatingEdge.remove();
     this.currentFloatingEdge = null;
   }
 
   onCancelConnection = () => {
-    this.currentFloatingEdge.destroy();
+    this.currentFloatingEdge.remove();
     this.currentFloatingEdge = null;
 
     this.instances.forEach(i => i.disableSelect = false);

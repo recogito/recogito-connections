@@ -46,9 +46,6 @@ export default class SVGFloatingEdge {
       .attr('class', 'r6o-connections-float-head');
   }
 
-  destroy = () =>
-    this.g.remove();
-
   dragTo = (x, y) => {
     this.end = { x, y };
     this.redraw();
@@ -90,6 +87,9 @@ export default class SVGFloatingEdge {
         .attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
     }
   });
+
+  remove = () =>
+    this.g.remove();
 
   snapTo = node => {
     this.end = node;
