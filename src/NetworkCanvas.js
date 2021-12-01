@@ -64,7 +64,16 @@ export default class NetworkCanvas extends EventEmitter {
       // Escape
       if (evt.which === 27 && this.currentArrow)
         this.onCancelConnection(); 
-    })
+    });
+
+    window.addEventListener('scroll', () => this.redraw(), opts);
+
+    if (window.ResizeObserver) {
+      const resizeObserver = new ResizeObserver(() =>
+        this.redraw());
+
+      resizeObserver.observe(this.svg.node.parentNode);
+    }
   }
 
   initHoverEvents = hoverState => {
@@ -193,6 +202,12 @@ export default class NetworkCanvas extends EventEmitter {
     setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
 
     document.body.classList.remove('r6o-hide-cursor');
+  }
+
+  redraw = () => {
+    const [ currentHover, ] = this.hoverStack;
+    if (currentHover)
+      currentHover.redraw();
   }
 
 }

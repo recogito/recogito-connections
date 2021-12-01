@@ -40,21 +40,36 @@ export default class NetworkNode {
    * edge should connect to.
    */
   constructor(annotation, optPreferredElement) {
+    // The annotation underlying this network node
     this.annotation = annotation;
 
+    // Optionally, the DOM element by which the annotation
+    // was grabbed. (Keep in mind that annotations might
+    // render as multiple DOM elements!)
     this.preferredElement = optPreferredElement;
+  }
 
+  /**
+   * The polygon faces the annotation is represented by.
+   * Note that an annotation might render as multiple DOM elements,
+   * and DOM elements != polygon faces. Typical case: an overlapping
+   * text annotation consists of multiple spans, but those would
+   * only represent a single rectangle face. Vice versa, a multiline
+   * text annotation would be a single span, but consist of multiple
+   * rectangle faces!
+   */
+  get faces () {
     // All DOM rects associated with all elements
     const rects = [];
 
-    for (let element of document.querySelectorAll(`*[data-id="${annotation.id}"]`)) {
+    for (let element of document.querySelectorAll(`*[data-id="${this.annotation.id}"]`)) {
       for (let rect of element.getClientRects()) {
         rects.push(rect);
       }
     }
 
-    // Convert to polygons and merge
-    this.faces = mergePolygons(rects.map(rect => {
+    // Merge all client-rects to one multi-polygon
+    return mergePolygons(rects.map(rect => {
       const { x, y, width, height } = rect;
 
       return new Polygon([

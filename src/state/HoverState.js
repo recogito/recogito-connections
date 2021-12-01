@@ -134,6 +134,10 @@ export default class HoverState {
     return this;
   }
 
+  redraw = () => {
+
+  }
+
   clearSVG = () => {
     if (this.g)
       this.g.remove();
