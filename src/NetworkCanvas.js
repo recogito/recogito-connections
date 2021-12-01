@@ -5,6 +5,8 @@ import Arrow from './connections/Arrow';
 import HoverState from './state/HoverState';
 
 import './NetworkCanvas.scss';
+import NetworkNode from './NetworkNode';
+import NetworkEdge from './NetworkEdge';
 
 const isAnnotation = element =>
   element.classList?.contains('r6o-annotation');
@@ -151,12 +153,37 @@ export default class NetworkCanvas extends EventEmitter {
     // Create connection
     this.emit('createConnection', this.currentArrow.toAnnotation().underlying);
 
+
+    // Debugging stuff...
+    const fromNode = new NetworkNode(
+      this.currentArrow.start.annotation
+    );
+
+    const toNode = new NetworkNode(
+      this.currentArrow.end.annotation
+    );
+
+    const edge = new NetworkEdge(fromNode, toNode);
+    this.drawEdge(edge);
+
     this.currentArrow.destroy();
     this.currentArrow = null;
 
     setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
 
     document.body.classList.remove('r6o-hide-cursor');
+  }
+
+  drawEdge = edge => {
+    console.log(edge);
+    console.log(edge.arrow())
+    const [ sx, sy, cx, cy, ex, ey, ae, ] = edge.arrow();
+
+    this.svg.path()
+      .attr('class', 'r6o-connections-network-edge')
+      .attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
+    //this.head.attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
+
   }
 
   onCancelConnection = () => {

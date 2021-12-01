@@ -38,6 +38,12 @@ svg.r6o-connections-canvas {
 
   }
 
+  .r6o-connections-network-edge {
+    fill:none;
+    stroke:red;
+    stroke-width:3px;
+  }
+
   g.r6o-connections-arrow {
 
     .r6o-connections-arrow-path {

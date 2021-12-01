@@ -111,9 +111,11 @@ export default class Arrow {
 
 }
 
-/*
-Arrow.fromAnnotations = (start, end, svgEl) => {
-  const fromBox = parseRectFragment(start);
+export const fromAnnotations = (start, end) => {
+  const fromNode = {
+    annotation: start
+  }
+  
   const toBox = parseRectFragment(end);
 
   const arrow = new Arrow(fromBox, svgEl);
@@ -121,4 +123,3 @@ Arrow.fromAnnotations = (start, end, svgEl) => {
 
   return arrow;
 } 
-*/
