@@ -7,6 +7,7 @@ import SVGHoveredNode from './svg/SVGHoveredNode';
 import Arrow from './connections/Arrow';
 
 import './NetworkCanvas.scss';
+import SVGFloatingEdge from './svg/SVGFloatingEdge';
 
 const isAnnotation = element =>
   element.classList?.contains('r6o-annotation');
@@ -27,7 +28,11 @@ export default class NetworkCanvas extends EventEmitter {
 
     this.initGlobalEvents();
 
+    // Current hover highlight
     this.currentHover = null;
+
+    // Current floating network edge (drawn by the user)
+    this.currentFloatingEdge = null;
   }
 
   initGlobalEvents = () => {
@@ -83,59 +88,56 @@ export default class NetworkCanvas extends EventEmitter {
    * arrow, snap it.
    */
   onEnterAnnotation = evt => {
-    const element = evt.target;
-    const { annotation } = element;
+    const { annotation } = evt.target;
+    const { clientX, clientY } = evt;
 
-    // Destroy previous, if any
+    // Destroy previous hover, if any
     if (this.currentHover)
       this.currentHover.remove();
 
-    const node = new NetworkNode(annotation, element);
+    // Network node for this hover
+    const node = new NetworkNode(annotation, { x: clientX, y: clientY });
 
-    this.currentHover = new SVGHoveredNode(node, this.svg);
+    // Draw handle if there's no floating edge yet
+    const drawHandle = !this.currentFloatingEdge;
+    this.currentHover = new SVGHoveredNode(node, this.svg, drawHandle);
     this.initHoverEvents(this.currentHover);
 
-    /*
-    if (this.currentArrow) {
-      this.currentArrow.snapTo(nextState);
-    } else {
-      nextState.renderHandle(this.svg, evt.clientX, evt.clientY);
-    }
-    */
+    // If there is a floating connection already, snap
+    if (this.currentFloatingEdge)
+      this.currentFloatingEdge.snapTo(node);
   }
 
-  onLeaveAnnotation = annotation =>  {
-    // Clear this state
+  onLeaveAnnotation = () =>  {
     this.currentHover.remove();
     this.currentHover = null;
   }
 
   /**
-   * If there is a current arrow and it's not snapped, drag it to mouse position.
+   * If there is a current floating edge and it's not snapped, 
+   * drag it to mouse position.
    */
   onMouseMove = evt => {
-    if (this.currentArrow) {
-      const [ currentHover, ] = this.hoverStack;
-
-      if (currentHover) {
-        this.currentArrow.snapTo(currentHover);
+    if (this.currentFloatingEdge) {
+      if (this.currentHover) {
         document.body.classList.remove('r6o-hide-cursor');
       } else {
-        // No hover - just follow the mouse
-        this.currentArrow.dragTo(evt.clientX, evt.clientY);
+        this.currentFloatingEdge.dragTo(evt.clientX, evt.clientY);
         document.body.classList.add('r6o-hide-cursor');
       }
     }
   }
 
-  onStartConnection = hoverState => {
-    this.currentArrow = new Arrow(hoverState).addTo(this.svg);
+  onStartConnection = node => {
+    this.currentFloatingEdge = new SVGFloatingEdge(node, this.svg);
 
     // Disable selection on RecogitoJS/Annotorious
     this.instances.forEach(i => i.disableSelect = true);
   }
 
   onCompleteConnection = () => {
+    console.log('done');
+    /*
     // Create connection
     this.emit('createConnection', this.currentArrow.toAnnotation().underlying);
 
@@ -158,8 +160,10 @@ export default class NetworkCanvas extends EventEmitter {
     setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
 
     document.body.classList.remove('r6o-hide-cursor');
+    */
   }
 
+  /*
   drawEdge = edge => {
     const [ sx, sy, cx, cy, ex, ey, ae, ] = edge.arrow();
 
@@ -174,7 +178,9 @@ export default class NetworkCanvas extends EventEmitter {
     });
 
   }
+  */
 
+  /*
   onCancelConnection = () => {
     this.currentArrow.destroy();
     this.currentArrow = null;
@@ -183,6 +189,7 @@ export default class NetworkCanvas extends EventEmitter {
 
     document.body.classList.remove('r6o-hide-cursor');
   }
+  */
 
   redraw = () => {
     if (this.currentHover)

@@ -1,5 +1,5 @@
 import { Box, Point, Polygon } from '@flatten-js/core';
-import { mergePolygons } from './Geom';
+import { getFaceBounds, mergePolygons } from './Geom';
 
 /**
  * A utility abstraction - encapsulates an annotation
@@ -10,19 +10,19 @@ export default class NetworkNode {
 
   /**
    * Instantiates a network node from an annotation and an
-   * optional 'preferred element'. Annotations can be multipolygons
+   * optional 'preferred coordinate'. Annotations can be multipolygons
    * or multiple spans (in case of overlapping annotations).
-   * The preferred element indicates which preferred sub-element 
-   * edge should connect to.
+   * The preferred coordinate indicates which sub-element should
+   * be used for rendering handles or connections.
    */
-  constructor(annotation, optPreferredElement) {
+  constructor(annotation, optXY) {
     // The annotation underlying this network node
     this.annotation = annotation;
 
-    // Optionally, the DOM element by which the annotation
+    // Optionally, the coordinate by which the annotation
     // was grabbed. (Keep in mind that annotations might
     // render as multiple DOM elements!)
-    this.preferredElement = optPreferredElement;
+    this.xy = optXY;
   }
 
   /**
@@ -69,32 +69,20 @@ export default class NetworkNode {
   }
 
   /**
-   * Returns the 'preferred face', i.e. the face intersecting 
-   * the preferred element (or, basically, a random face, if none).
-   */
-  getPreferredFace = () => {
-    if (this.preferredElement) {
-      const { x, y, width, height } = this.preferredElement.getBoundingClientRect();
-      const box = new Box(x, y, x + width, y + height);
-      const [ intersecting, _ ] = this.faces.search(box);
-      return intersecting;
-    } else {
-      return Array.from(this.faces)[0];
-    }
-  }
-
-  /**
    * Works like the DOM element method, but takes an optional
    * xy-argument to determine which sub-element of the annotation
    * should be picked for the bounds. If no arg is provided,
    * this.preferredElement is used. If there's no preferred element,
    * the method will use the bounds of the first sub-element.
    */
-  getBoundingClientRect = optXY => {
-    if (optXY) {
-      return getFaceBounds(this.getFaceUnderPoint(optXY));
+  getBoundingClientRect = () => {
+    const defaultFace = Array.from(this.faces)[0];
+
+    if (this.xy) {
+      const prefFace = this.getFaceUnderPoint(this.xy);
+      return prefFace ? getFaceBounds(prefFace) : getFaceBounds(defaultFace);
     } else {
-      return getFaceBounds(this.getPreferredFace());
+      return getFaceBounds(defaultFace);
     }
   }
 

@@ -8,6 +8,14 @@ export default class SVGFloatingEdge {
     this.start = startNode;
   }
 
+  dragTo = (x, y) => {
+
+  }
+
+  snapTo = node => {
+
+  }
+
   redraw = () => {
     
   }
