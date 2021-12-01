@@ -1,4 +1,5 @@
 import { getBoxToBoxArrow } from 'perfect-arrows';
+import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
 
 import { ARROW_CONFIG } from '../Geom';
 
@@ -46,19 +47,16 @@ export default class SVGFloatingEdge {
       .attr('class', 'r6o-connections-float-head');
   }
 
+  destroy = () =>
+    this.g.remove();
+
   dragTo = (x, y) => {
     this.end = { x, y };
     this.redraw();
   }
 
-  isSnapped = () => {
-    
-  }
-
-  snapTo = node => {
-    this.end = node;
-    this.redraw();
-  }
+  isSnapped = () =>
+    !!this.end?.annotation;
 
   redraw = () => window.requestAnimationFrame(() => {
     if (this.end) {
@@ -93,6 +91,18 @@ export default class SVGFloatingEdge {
       this.g.find('polygon')
         .attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
     }
+  });
+
+  snapTo = node => {
+    this.end = node;
+    this.redraw();
+  }
+
+  toAnnotation = () => WebAnnotation.create({
+    target: [
+      { id: this.start.annotation.id },
+      { id: this.end?.annotation?.id }
+    ]
   });
 
 }
