@@ -1,3 +1,5 @@
+import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
+
 import NetworkCanvas from './NetworkCanvas';
 
 class ConnectionsPlugin {
@@ -8,11 +10,26 @@ class ConnectionsPlugin {
     this.canvas = new NetworkCanvas(this.instances);
   }
 
-  on = (event, handler) => this.canvas.on(event, handler);
+  loadAnnotations = url => fetch(url)
+    .then(response => response.json()).then(annotations => {
+      this.setAnnotations(annotations);
+      return annotations;
+    });
 
-  off = (event, handler) => this.canvas.off(event, handler);
+  on = (event, handler) =>
+    this.canvas.on(event, handler);
 
-  once = (event, handler) => this.canvas.once(event, handler);
+  off = (event, handler) =>
+    this.canvas.off(event, handler);
+
+  once = (event, handler) =>
+    this.canvas.once(event, handler);
+
+  setAnnotations = arg => {
+    const annotations = arg || []; // Allow null arg
+    const webannotations = annotations.map(a => new WebAnnotation(a));
+    this.canvas.setAnnotations(webannotations);
+  }
 
 }
 

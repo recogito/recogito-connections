@@ -1,13 +1,13 @@
 import { SVG } from '@svgdotjs/svg.js';
 import EventEmitter from 'tiny-emitter';
 
+import NetworkEdge from './NetworkEdge';
 import NetworkNode from './NetworkNode';
 import SVGEdge from './svg/SVGEdge';
 import SVGFloatingEdge from './svg/SVGFloatingEdge';
 import SVGHoveredNode from './svg/SVGHoveredNode';
 
 import './NetworkCanvas.scss';
-import NetworkEdge from './NetworkEdge';
 
 const isAnnotation = element =>
   element.classList?.contains('r6o-annotation');
