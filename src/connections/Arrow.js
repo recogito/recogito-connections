@@ -62,7 +62,7 @@ export default class Arrow {
   destroy = () =>
     this.g.remove();
   
-    dragTo = (x, y) => window.requestAnimationFrame(() => {
+  dragTo = (x, y) => window.requestAnimationFrame(() => {
     this.end = { x, y, width: 0, height: 0 };
     this.render();
   });

@@ -59,7 +59,7 @@ export default class NetworkCanvas extends EventEmitter {
     });
 
     document.addEventListener('mousedown', () => {
-      if (this.currentArrow && this.currentArrow.isSnapped())
+      if (this.currentFloatingEdge && this.currentFloatingEdge.isSnapped())
         this.onCompleteConnection();
     });
 
@@ -80,9 +80,9 @@ export default class NetworkCanvas extends EventEmitter {
     }
   }
 
-  initHoverEvents = node => {
-    node.on('startConnection', () => this.onStartConnection(node));
-    node.on('mouseout', () => this.onLeaveAnnotation(node.annotation));
+  initHoverEvents = hover => {
+    hover.on('startConnection', () => this.onStartConnection(hover.node));
+    hover.on('mouseout', this.onLeaveAnnotation);
   }
 
   /**
@@ -130,6 +130,7 @@ export default class NetworkCanvas extends EventEmitter {
   }
 
   onStartConnection = node => {
+    console.log('starting connection', node);
     this.currentFloatingEdge = new SVGFloatingEdge(node, this.svg);
 
     // Disable selection on RecogitoJS/Annotorious

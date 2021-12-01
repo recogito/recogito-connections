@@ -32,8 +32,6 @@ export default class SVGEdge {
       .attr('class', 'r6o-connections-arrow-head');
   }
 
-
-
   redraw = () => {
 
   }

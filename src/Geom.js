@@ -8,6 +8,7 @@ export const ARROW_CONFIG = {
   padStart: 0,
   padEnd: 6,
   straights: false,
+  flip: true
 };
 
 /**  Merges N (multi-)polygons into one **/

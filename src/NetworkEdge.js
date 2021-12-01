@@ -1,15 +1,5 @@
 import { getBoxToBoxArrow } from 'perfect-arrows';
 
-const CONFIG = {
-  bow: 0,
-  stretch: 0.3,
-  stretchMin: 40,
-  stretchMax: 420,
-  padStart: 0,
-  padEnd: 0,
-  straights: false
-};
-
 /**
  * A network edge, between two network nodes.
  */
