@@ -1,29 +1,5 @@
-import { BooleanOperations, Box, Point, Polygon } from '@flatten-js/core';
-
-/** 
- * Helper to merge N (multi-)polygons into one.
- */
-const mergePolygons = polygons => {
-  const [ first, ...rest ] = polygons;
-
-  return rest.reduce((merged, next) => {
-    return BooleanOperations.unify(merged, next);
-  }, first);
-}
-
-/**
- * Returns the { x, y, width, height } bounding box of the given
- * face.
- */
-const getFaceBounds = face => {
-  const { xmin, ymin, xmax, ymax } = face.box;
-  return {
-    x: xmin,
-    y: ymin,
-    width: xmax - xmin,
-    height: ymax - ymin
-  };
-}
+import { Box, Point, Polygon } from '@flatten-js/core';
+import { mergePolygons } from './Geom';
 
 /**
  * A utility abstraction - encapsulates an annotation

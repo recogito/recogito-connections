@@ -1,12 +1,12 @@
 import { SVG, Path } from '@svgdotjs/svg.js';
 import EventEmitter from 'tiny-emitter';
-import NetworkNode from './NetworkNode';
-import NetworkEdge from './NetworkEdge';
-import SVGHoveredNode from './svg/SVGHoveredNode';
 
 import Arrow from './connections/Arrow';
+import HoverState from './state/HoverState';
 
 import './NetworkCanvas.scss';
+import NetworkNode from './NetworkNode';
+import NetworkEdge from './NetworkEdge';
 
 const isAnnotation = element =>
   element.classList?.contains('r6o-annotation');
@@ -27,7 +27,12 @@ export default class NetworkCanvas extends EventEmitter {
 
     this.initGlobalEvents();
 
-    this.currentHover = null;
+    // TODO I think after switching from mouseenter to mouseover, we don't need this anymore!
+    this.hoverStack = [];
+
+    this.currentArrow = null;
+
+    this.connections = [];
   }
 
   initGlobalEvents = () => {
@@ -58,7 +63,8 @@ export default class NetworkCanvas extends EventEmitter {
     document.addEventListener('mousemove', this.onMouseMove);
 
     document.addEventListener('keyup', evt => {
-      if (evt.code === 27 && this.currentArrow) // Escape
+      // Escape
+      if (evt.which === 27 && this.currentArrow)
         this.onCancelConnection(); 
     });
 
@@ -72,9 +78,9 @@ export default class NetworkCanvas extends EventEmitter {
     }
   }
 
-  initHoverEvents = node => {
-    node.on('startConnection', () => this.onStartConnection(node));
-    node.on('mouseout', () => this.onLeaveAnnotation(node.annotation));
+  initHoverEvents = hoverState => {
+    hoverState.on('startConnection', () => this.onStartConnection(hoverState));
+    hoverState.on('mouseout', () => this.onLeaveAnnotation(hoverState.annotation));
   }
 
   /**
@@ -86,28 +92,47 @@ export default class NetworkCanvas extends EventEmitter {
     const element = evt.target;
     const { annotation } = element;
 
+    const previousState = this.hoverStack.length > 0 &&
+      this.hoverStack[this.hoverStack.length - 1];
+
     // Destroy previous, if any
-    if (this.currentHover)
-      this.currentHover.remove();
+    if (previousState)
+      previousState.clearSVG();
 
-    const node = new NetworkNode(annotation, element);
+    const nextState = new HoverState(annotation, element);
+    this.initHoverEvents(nextState);
+    this.hoverStack.push(nextState);
 
-    this.currentHover = new SVGHoveredNode(node, this.svg);
-    this.initHoverEvents(this.currentHover);
-
-    /*
+    nextState.renderOutline(this.svg);
+    
     if (this.currentArrow) {
       this.currentArrow.snapTo(nextState);
     } else {
       nextState.renderHandle(this.svg, evt.clientX, evt.clientY);
     }
-    */
   }
 
+  /**
+   * When leaving an annotation, clear the hover if necessary.
+   */
   onLeaveAnnotation = annotation =>  {
-    // Clear this state
-    this.currentHover.remove();
-    this.currentHover = null;
+    const state = this.hoverStack.find(state => state.annotation.isEqual(annotation));
+
+    if (state) {
+      // Clear this state
+      state.clearSVG();
+      
+      // Remove from the stack
+      this.hoverStack = this.hoverStack.filter(s => s !== state);
+
+      // Render previous state, if any
+      if (this.hoverStack.length > 0) {
+        const topState = this.hoverStack[this.hoverStack.length - 1];
+        this.initHoverEvents(topState);
+        topState.renderOutline(this.svg);
+        topState.renderHandle(this.svg);
+      }
+    }
   }
 
   /**
@@ -185,16 +210,15 @@ export default class NetworkCanvas extends EventEmitter {
   }
 
   redraw = () => {
-    if (this.currentHover)
-      this.currentHover.redraw();
+    const [ currentHover, ] = this.hoverStack;
+    if (currentHover)
+      currentHover.redraw();
 
-    /*
     this.connections.forEach(connection => {
       const { edge, svg } = connection;
       const [ sx, sy, cx, cy, ex, ey, ae, ] = edge.arrow();
       svg.attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
     });
-    */
   }
 
 }
