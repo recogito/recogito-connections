@@ -87,23 +87,31 @@ export default class NetworkNode {
     return intersecting;
   }
 
-  /**
-   * Works like the DOM element method, but takes an optional
-   * xy-argument to determine which sub-element of the annotation
-   * should be picked for the bounds. If no arg is provided,
-   * this.preferredElement is used. If there's no preferred element,
-   * the method will use the bounds of the first sub-element.
-   */
-  getBoundingClientRect = () => {
-    const defaultFace = Array.from(this.faces)[0];
+  getAttachableRect = optReference => {
+    const faces = Array.from(this.faces);
 
     if (this.xy) {
-      const prefFace = this.getFaceUnderPoint(this.xy);
-      return prefFace ? getFaceBounds(prefFace) : getFaceBounds(defaultFace);
+      const f = this.getFaceUnderPoint(this.xy);
+      return f ? getFaceBounds(f) : getFaceBounds(faces[0]);
+    } else if (optReference) {
+      const { x, y, width, height } = optReference;
+
+      // Compute distance between the reference shape and each face
+      const a = new Polygon(new Box(x, y, x + width, y + height));
+      
+      const sorted = faces.map(face => {
+        const [ distance, ] = new Polygon(face.shapes).distanceTo(a);
+        return { face, distance }; 
+      }).sort((a,b) => a.distance - b.distance);
+
+      return getFaceBounds(sorted[0].face);
     } else {
-      return getFaceBounds(defaultFace);
+      return getFaceBounds(faces[0]);
     }
   }
+
+  resetAttachment = () => 
+    this.xy = null;
 
 }
 

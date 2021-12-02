@@ -96,7 +96,7 @@ export default class NetworkCanvas extends EventEmitter {
 
     if (window.ResizeObserver) {
       const resizeObserver = new ResizeObserver(() =>
-        this.redraw());
+        this.redraw(true));
 
       resizeObserver.observe(this.svg.node.parentNode);
     }
@@ -190,9 +190,12 @@ export default class NetworkCanvas extends EventEmitter {
     document.body.classList.remove('r6o-hide-cursor');
   }
 
-  redraw = () => {
+  redraw = reflow => {
     if (this.currentHover)
       this.currentHover.redraw();
+
+    if (reflow)
+      this.connections.forEach(connection => connection.resetAttachment());
 
     this.connections.forEach(connection => connection.redraw());
   }

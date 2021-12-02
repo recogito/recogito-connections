@@ -56,8 +56,8 @@ export default class SVGFloatingEdge {
 
   redraw = () => window.requestAnimationFrame(() => {
     if (this.end) {
-      const start = this.start.getBoundingClientRect();
-      const end = this.end.annotation ? this.end.getBoundingClientRect() : this.end;
+      const start = this.start.getAttachableRect();
+      const end = this.end.annotation ? this.end.getAttachableRect() : this.end;
 
       const [ sx, sy, cx, cy, ex, ey, ae, ] = getBoxToBoxArrow(
         start.x,

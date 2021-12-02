@@ -78,7 +78,7 @@ export default class SVGHoveredNode {
   }
 
   _redrawHandle = () => {
-    const { x, y, width } = this.node.getBoundingClientRect();
+    const { x, y, width } = this.node.getAttachableRect();
 
     const cx = Math.round(x + width / 2);
     const cy = Math.round(y);

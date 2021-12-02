@@ -38,8 +38,9 @@ export default class SVGEdge {
   }
 
   redraw = () => {
-    const start = this.edge.start.getBoundingClientRect();
-    const end = this.edge.end.getBoundingClientRect();
+    let start = this.edge.start.getAttachableRect();
+    const end = this.edge.end.getAttachableRect(start);
+    start = this.edge.start.getAttachableRect(end);
 
     const [ sx, sy, cx, cy, ex, ey, ae, ] = getBoxToBoxArrow(
       start.x,
@@ -67,6 +68,11 @@ export default class SVGEdge {
     // Arrow head
     this.g.find('polygon')
       .attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
+  }
+
+  resetAttachment = () => {
+    this.edge.start.resetAttachment();
+    this.edge.end.resetAttachment();
   }
 
   remove = () => 
