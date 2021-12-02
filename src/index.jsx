@@ -17,7 +17,11 @@ const isConnection = annotation => {
 
 class ConnectionsPlugin {
 
-  constructor(instances) {
+  constructor(instances, conf) {
+    
+    // Configuration options
+    const config = conf || {};
+
     this.instances = Array.isArray(instances) ? instances : [ instances ];
 
     this._editor = React.createRef();
@@ -49,13 +53,19 @@ class ConnectionsPlugin {
     this.canvas = new NetworkCanvas(this.instances);
     
     this.canvas.on('createConnection', connection => {
-      this._editor.current.editConnection(connection);
+      // this._editor.current.editConnection(connection);
     });
 
-    const container = document.createElement('div');
-    document.body.appendChild(container);
+    if (config.useEditor) {
+      const container = document.createElement('div');
+      document.body.appendChild(container);
 
-    ReactDOM.render(<PayloadEditor ref={this._editor} />, container);
+      ReactDOM.render(
+        <PayloadEditor 
+          ref={this._editor} 
+          config={config} 
+          onCancel={() => console.log('cancel') } />, container);
+    }
   }
 
   on = (event, handler) => {
@@ -72,4 +82,4 @@ class ConnectionsPlugin {
 
 }
 
-export default instances => new ConnectionsPlugin(instances);
+export default (instances, config) => new ConnectionsPlugin(instances, config);

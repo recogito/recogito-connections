@@ -1,5 +1,80 @@
+@import '@recogito/recogito-client-core/themes/default/globals/includes/colors';
+@import '@recogito/recogito-client-core/themes/default/globals/includes/mixins';
+
 .r6o-connections-editor {
-  position:absolute;
+  // TODO hack!
   top:20px;
   left:20px;
+
+
+  position:absolute;
+  font-size:17px;
+  line-height:27px;
+  transform:translate(-50%, -50%);
+  background-color:#fff;
+  @include box-shadow(0, 1px, 14px, 0.4);
+  @include rounded-corners(3px);
+
+  svg {
+    vertical-align:middle;
+    shape-rendering: geometricPrecision;
+  }
+
+  * {
+    box-sizing:border-box;
+  }
+
+  .r6o-connections-editor-input-wrapper {
+    height:34px;
+    padding:0 6px;
+    margin-right:68px;
+    font-size:14px;
+    background-color:$blueish-white;
+    cursor:text;
+    @include rounded-corners-left(3px);
+    
+    .r6o-autocomplete ul {
+      position:relative;
+      left:-6px;
+    }
+  }
+
+  .r6o-connections-editor-buttons {
+    position:absolute;
+    display:inline-flex;
+    top:0;
+    right:0;
+
+    span {
+      height:34px;
+      display:inline-block;
+      width:34px;
+      text-align:center;
+      font-size:14px;
+      cursor:pointer;
+      padding:1px 0;
+    }
+
+    .delete {
+      background-color:#fff;
+      color:$lightblue-type;
+      border-left:1px solid $lightgrey-border;
+    }
+
+    .delete:hover {
+      background-color:#f6f6f6;
+    }
+
+    .ok {
+      background-color:$ocean;
+      color:#fff;
+      @include rounded-corners-right(3px);
+    }
+
+    .ok:hover {
+      background-color:$ocean-hover;
+    }
+
+  }
+  
 }

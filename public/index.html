@@ -80,7 +80,7 @@
           allowEmpty: true
         });
 
-        var connections = recogito.Connections([ r1, r2 ]);
+        var connections = recogito.Connections([ r1, r2 ], { useEditor: true });
 
         connections.on('createConnection', function(c) {
           console.log('created', JSON.stringify(c));
