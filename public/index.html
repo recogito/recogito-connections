@@ -71,11 +71,13 @@
     <script type="text/javascript">
       window.onload = function() {
         var r1 = Recogito.init({
-          content: 'content1'
+          content: 'content1',
+          allowEmpty: true
         });
 
         var r2 = Recogito.init({
-          content: 'content2'
+          content: 'content2',
+          allowEmpty: true
         });
 
         var connections = recogito.Connections([ r1, r2 ]);

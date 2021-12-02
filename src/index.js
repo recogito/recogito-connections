@@ -22,22 +22,18 @@ class ConnectionsPlugin {
     const patchInstances = instance => {
       const _setAnnotations = instance.setAnnotations;
 
-      instance.setAnnotations = arg => {
+      instance.setAnnotations = arg =>
         // Set annotations on instance first
-        _setAnnotations(arg);
-
-        // Then create relations
-        const annotations = arg || []; // Allow null arg
-  
-        const connections = annotations
-          .map(a => new WebAnnotation(a))
-          .filter(isConnection);
+        _setAnnotations(arg).then(() => {
+          // Then create relations
+          const annotations = arg || []; // Allow null arg
     
-        // TODO Hack! Until the external API returns a promise we can
-        // use to get notified of rendering complete
-        window.setTimeout(() =>
-          this.canvas.setAnnotations(connections), 200);  
-      }
+          const connections = annotations
+            .map(a => new WebAnnotation(a))
+            .filter(isConnection);
+    
+          this.canvas.setAnnotations(connections);
+        });
 
       instance.on('deleteAnnotation', annotation =>
         this.canvas.deleteConnectionsForId(annotation.id));

@@ -1,7 +1,9 @@
-const TETHER_LENGTH = 16;
-const DOT_SIZE = 3;
-const HANDLE_SIZE = 8;
-const MOUSE_BUFFER = 4;
+import { 
+  TETHER_LENGTH,
+  DOT_SIZE,
+  HANDLE_SIZE,
+  MOUSE_BUFFER
+} from './Config';
 
 /**
  * A compound SVG shape representing a network node currently
