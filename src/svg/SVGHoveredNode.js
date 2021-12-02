@@ -48,10 +48,7 @@ export default class SVGHoveredNode {
         .attr('width', HANDLE_SIZE * 2 + 2 * MOUSE_BUFFER)
         .attr('height', HANDLE_SIZE + TETHER_LENGTH + DOT_SIZE + 2 * MOUSE_BUFFER)
         .attr('class', 'r6o-connections-handle-mousetrap')
-        .mouseout(() => {
-          console.log('asdfas');
-          this.fireEvent('mouseout');
-        });
+        .mouseout(() => this.fireEvent('mouseout'));
 
       handle.mousedown(() => this.fireEvent('startConnection'));
     }

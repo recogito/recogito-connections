@@ -148,7 +148,6 @@ export default class NetworkCanvas extends EventEmitter {
   }
 
   onStartConnection = node => {
-    console.log('starting connection', node);
     this.currentFloatingEdge = new SVGFloatingEdge(node, this.svg);
 
     // Disable selection on RecogitoJS/Annotorious
