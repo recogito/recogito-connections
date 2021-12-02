@@ -14,36 +14,6 @@ svg.r6o-connections-canvas {
   height:100vh;
   pointer-events:none;
 
-  .r6o-connections-hover {
-    fill:rgba(0, 0, 0, 0.1);
-    stroke:rgba(0, 0, 0, 0.6);
-    stroke-width:0;
-    cursor:pointer;
-  }
-
-  .r6o-connections-handle {
-    pointer-events:auto;
-    cursor:crosshair;
-
-    .r6o-connections-handle-outer {
-      fill:#fff;
-      stroke-width:2px;
-      stroke:#000;
-      pointer-events:auto;
-    }
-
-    .r6o-connections-handle-inner {
-      fill:#000;
-    }
-
-  }
-
-  .r6o-connections-network-edge {
-    fill:none;
-    stroke:red;
-    stroke-width:3px;
-  }
-
   .r6o-connections-edge,
   .r6o-connections-float {
 
@@ -97,6 +67,49 @@ svg.r6o-connections-canvas {
       }
 
       .r6o-connections-float-base-inner {
+        fill:#000;
+      }
+
+    }
+
+  }
+
+  .r6o-connections-hover {
+
+    .r6o-connections-hover-emphasis {
+      fill:rgba(0, 0, 0, 0.1);
+      stroke:rgba(0, 0, 0, 0.6);
+      stroke-width:0;
+      cursor:pointer;
+    }
+
+    .r6o-connections-handle {
+      pointer-events:auto;
+      cursor:crosshair;
+
+      .r6o-connections-handle-mousetrap {
+        fill:transparent;
+      }
+
+      .r6o-connections-handle-dot {
+        fill:#000;
+        stroke-width:0;
+      }
+
+      .r6o-connections-handle-tether {
+        stroke:#000;
+        stroke-width:2;
+        stroke-dasharray:2 2;
+      }
+
+      .r6o-connections-handle-outer {
+        fill:#fff;
+        stroke-width:2px;
+        stroke:#000;
+        pointer-events:auto;
+      }
+
+      .r6o-connections-handle-inner {
         fill:#000;
       }
 

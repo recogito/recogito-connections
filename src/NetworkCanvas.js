@@ -15,7 +15,7 @@ const isAnnotation = element =>
 
 /** Checks if the given DOM element is a connection handle **/
 const isHandle = element =>
-  element?.closest && element.closest('.r6o-connections-handle');
+  element?.closest && element.closest('.r6o-connections-hover');
 
 export default class NetworkCanvas extends EventEmitter {
 
