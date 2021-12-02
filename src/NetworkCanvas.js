@@ -76,10 +76,14 @@ export default class NetworkCanvas extends EventEmitter {
       }
     });
 
-    document.addEventListener('mousedown', () => {
+    // Common 'click' behavior, used both for mousedown and drag + mouseup
+    const onClick = () => {
       if (this.currentFloatingEdge && this.currentFloatingEdge.isSnapped())
         this.onCompleteConnection();
-    });
+    }
+
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('mouseup', onClick)
 
     document.addEventListener('mousemove', this.onMouseMove);
 
