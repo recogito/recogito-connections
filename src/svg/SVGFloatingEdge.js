@@ -1,3 +1,4 @@
+import { G } from '@svgdotjs/svg.js';
 import { getBoxToBoxArrow } from 'perfect-arrows';
 
 import { ARROW_CONFIG } from './Config';
@@ -15,8 +16,10 @@ export default class SVGFloatingEdge {
     // End is null initiall, then either x/y or a network node
     this.end = null;
 
+    this.svg = svg;
+
     // SVG container group
-    this.g = svg.group()
+    this.g = new G()
       .attr('class', 'r6o-connections-float');
 
     // Edge path
@@ -44,9 +47,17 @@ export default class SVGFloatingEdge {
     // Edge head is a triangle
     this.g.polygon('0,-8 16,0, 0,8')
       .attr('class', 'r6o-connections-float-head');
+
+    // Remain hidden until .dragTo is first called
+    this.hidden = true;
   }
 
   dragTo = (x, y) => {
+    if (this.hidden) {
+      this.g.addTo(this.svg);
+      this.hidden = false;
+    }
+
     this.end = { x, y };
     this.redraw();
   }
