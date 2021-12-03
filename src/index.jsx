@@ -24,8 +24,6 @@ class ConnectionsPlugin {
 
     this.instances = Array.isArray(instances) ? instances : [ instances ];
 
-    this._editor = React.createRef();
-
     // Monkey-patches the .setAnnotations method of each instance
     // with an interceptor
     const patchInstances = instance => {
@@ -51,12 +49,15 @@ class ConnectionsPlugin {
     this.instances.forEach(i => patchInstances(i));
 
     this.canvas = new NetworkCanvas(this.instances);
-    
-    this.canvas.on('createConnection', connection => {
-      // this._editor.current.editConnection(connection);
-    });
+  
 
     if (config.useEditor) {
+      this._editor = React.createRef();
+
+      this.canvas.on('createConnection', (connection, xy) => {
+        this._editor.current.editConnection(connection, xy);
+      });
+
       const container = document.createElement('div');
       document.body.appendChild(container);
 

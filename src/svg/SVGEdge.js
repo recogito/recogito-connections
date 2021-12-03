@@ -68,6 +68,11 @@ export default class SVGEdge {
     // Arrow head
     this.g.find('polygon')
       .attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
+
+    // Expose essential anchor points
+    this.startpoint = { x: sx, y: sy };
+    this.midpoint = { x: cx, y: cy };
+    this.endpoint = { x: ex, y: ey };
   }
 
   resetAttachment = () => {

@@ -169,9 +169,10 @@ export default class NetworkCanvas extends EventEmitter {
 
     const annotation = edge.toAnnotation();
 
-    this.connections.push(new SVGEdge(edge, this.svg));
+    const svgEdge = new SVGEdge(edge, this.svg);
+    this.connections.push(svgEdge);
 
-    this.emit('createConnection', annotation.underlying);
+    this.emit('createConnection', annotation.underlying, svgEdge.midpoint);
     
     setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
 

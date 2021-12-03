@@ -12,13 +12,24 @@ export default class PayloadEditor extends Component {
     this.element = React.createRef();
 
     this.state = {
-      connection: null
+      connection: null,
+      top: 0,
+      left: 0
     }
   }
   
 
-  editConnection(connection, x, y) {
-    this.setState({ connection });
+  editConnection(connection, xy) {
+    this.setState({ 
+      connection,
+      top: xy.y,
+      left: xy.x
+    });
+
+    if (this.element.current) {
+      this.element.current.style.left = xy.x;
+      this.element.current.style.top = xy.y;
+    }
   }
 
   onSubmit = value => {
@@ -28,7 +39,8 @@ export default class PayloadEditor extends Component {
   render() {
     return this.state.connection ? (
       <div
-        ref={this.element} 
+        ref={this.element}
+        style={{ top: this.state.top, left: this.state.left }} 
         className="r6o-connections-editor">
 
         <div className="r6o-connections-editor-input-wrapper">
