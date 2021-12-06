@@ -18,6 +18,13 @@ export default class PayloadEditor extends Component {
     }
   }
 
+  close = () =>
+    this.setState({
+      connection: null,
+      isNew: false,
+      inputValue: ''
+    });
+
   editConnection(connection, pos, isNew) {
     const top = pos.y;
     const left = pos.x;
@@ -39,15 +46,12 @@ export default class PayloadEditor extends Component {
     else
       this.props.onConnectionUpdated(updated, this.state.connection);
 
-    this.setState({ connection: null });
+    this.close();
   }
-
-  onCancel = () =>
-    this.setState({ connection: null });
 
   onDelete = () => {
     this.props.onConnectionDeleted(this.state.connection);
-    this.setState({ connection: null });
+    this.close();
   }
 
   render() {
@@ -62,7 +66,7 @@ export default class PayloadEditor extends Component {
             placeholder="Tag..."
             onSubmit={this.onSubmit} 
             onChange={this.onChange}
-            onCancel={this.onCancel}
+            onCancel={this.close}
             vocabulary={this.props.vocabulary || []} />
         </div>
 
