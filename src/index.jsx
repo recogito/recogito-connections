@@ -50,9 +50,10 @@ class ConnectionsPlugin extends EventEmitter {
 
     this.canvas = new NetworkCanvas(this.instances);
   
-
     if (config.useEditor)
       useEditor(this.canvas, this, config); 
+
+    // TODO wire up events in case of headless operation
   }
 
 }
