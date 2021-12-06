@@ -1,4 +1,5 @@
 import { getBoxToBoxArrow } from 'perfect-arrows';
+import EventEmitter from 'tiny-emitter';
 
 import { ARROW_CONFIG } from './Config';
 
@@ -6,17 +7,23 @@ import { ARROW_CONFIG } from './Config';
  * A compound SVG shape representing an existing network 
  * edge between two nodes.
  */
-export default class SVGEdge {
+export default class SVGEdge extends EventEmitter {
 
   constructor(edge, svg) {
+    super();
+
     this.edge = edge;
 
     this.g = svg.group()
-      .attr('class', 'r6o-connections-edge');
+      .attr('class', 'r6o-connections-edge has-events')
+      .click(() => this.emit('click', this.edge));
 
     // Edge path
     const svgEdge = this.g.group()
       .attr('class', 'r6o-connections-edge-path');
+
+    svgEdge.path()
+      .attr('class', 'r6o-connections-edge-path-buffer');
 
     svgEdge.path()
       .attr('class', 'r6o-connections-edge-path-outer');

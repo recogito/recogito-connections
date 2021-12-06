@@ -9,32 +9,32 @@ export default class PayloadEditor extends Component {
   constructor(props) {
     super(props);
 
-    this.element = React.createRef();
-
     this.state = {
       connection: null,
       top: 0,
-      left: 0
+      left: 0,
+      isNew: false
     }
   }
   
-
-  editConnection(connection, xy) {
-    this.setState({ 
-      connection,
-      top: xy.y,
-      left: xy.x
-    });
-
-    if (this.element.current) {
-      this.element.current.style.left = xy.x;
-      this.element.current.style.top = xy.y;
-    }
+  editConnection(connection, pos, isNew) {
+    const top = pos.y;
+    const left = pos.x;
+    this.setState({ connection, top, left, isNew });
   }
 
   onSubmit = value => {
-    // TODO
+    // TODO Update bodies!
+    const updated = connection;
+
+    if (this.state.isNew)
+      this.props.onConnectionCreated(updated);
+    else
+      this.props.onConnectionUpdated(updated, this.state.connection);
   }
+
+  onCancel = () =>
+    this.setState({ connection: null });
 
   render() {
     return this.state.connection ? (
@@ -47,14 +47,14 @@ export default class PayloadEditor extends Component {
           <Autocomplete 
             placeholder="Tag..."
             onSubmit={this.onSubmit} 
-            onCancel={this.props.onCancel}
+            onCancel={this.onCancel}
             vocabulary={this.props.vocabulary || []} />
         </div>
 
         <div className="r6o-connections-editor-buttons">
           <span 
             className="r6o-icon delete"
-            onClick={this.onDelete}>
+            onClick={() => this.props.onConnectionDeleted(this.state.connection)}>
             <TrashIcon width={14} />
           </span>
 

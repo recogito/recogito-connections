@@ -158,6 +158,16 @@ export default class NetworkCanvas extends EventEmitter {
     this.instances.forEach(i => i.disableSelect = true);
   }
 
+  addEdge = edge => {
+    const svgEdge = new SVGEdge(edge, this.svg);
+
+    svgEdge.on('click', () =>
+      this.emit('selectConnection', edge.toAnnotation(), svgEdge.midpoint));
+
+    this.connections.push(svgEdge);
+    return svgEdge;
+  }
+
   /**
    * TODO we still need to incorporate an editor for the 
    * connection body payload.
@@ -169,10 +179,9 @@ export default class NetworkCanvas extends EventEmitter {
 
     const annotation = edge.toAnnotation();
 
-    const svgEdge = new SVGEdge(edge, this.svg);
-    this.connections.push(svgEdge);
+    const svgEdge = this.addEdge(edge);
 
-    this.emit('createConnection', annotation.underlying, svgEdge.midpoint);
+    this.emit('createConnection', annotation, svgEdge.midpoint);
     
     setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
 
@@ -204,9 +213,7 @@ export default class NetworkCanvas extends EventEmitter {
   setAnnotations = annotations => annotations.forEach(a => {
     const start = NetworkNode.findById(a.targets[0].id);
     const end = NetworkNode.findById(a.targets[1].id);
-
-    const edge = new NetworkEdge(start, end);
-    this.connections.push(new SVGEdge(edge, this.svg));
+    this.addEdge(new NetworkEdge(start, end));
   });
 
 }

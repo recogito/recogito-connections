@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
 
 import NetworkCanvas from './NetworkCanvas';
-import PayloadEditor from './editor/PayloadEditor';
+import useEditor from './editor/useEditor';
 
 /** Checks if the given annotation represents a connection **/
 const isConnection = annotation => {
@@ -51,22 +51,8 @@ class ConnectionsPlugin {
     this.canvas = new NetworkCanvas(this.instances);
   
 
-    if (config.useEditor) {
-      this._editor = React.createRef();
-
-      this.canvas.on('createConnection', (connection, xy) => {
-        this._editor.current.editConnection(connection, xy);
-      });
-
-      const container = document.createElement('div');
-      document.body.appendChild(container);
-
-      ReactDOM.render(
-        <PayloadEditor 
-          ref={this._editor} 
-          config={config} 
-          onCancel={() => console.log('cancel') } />, container);
-    }
+    if (config.useEditor)
+      useEditor(this.canvas, config); 
   }
 
   on = (event, handler) => {

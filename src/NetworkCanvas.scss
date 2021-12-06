@@ -14,6 +14,15 @@ svg.r6o-connections-canvas {
   height:100vh;
   pointer-events:none;
 
+  .has-events {
+    pointer-events:auto;
+
+    * {
+      pointer-events:auto;
+    }
+
+  }
+
   .r6o-connections-edge,
   .r6o-connections-float {
 
@@ -32,7 +41,7 @@ svg.r6o-connections-canvas {
       .r6o-connections-float-path-outer {
         fill:none;
         stroke:rgba(255, 255, 255, 0.7);
-        stroke-width:7px;
+        stroke-width:5px;
       }
 
     }
@@ -51,6 +60,25 @@ svg.r6o-connections-canvas {
     .r6o-connections-edge-base {
       fill:#000;
       stroke-width:0;
+    }
+
+    .r6o-connections-edge-path-buffer {
+      fill:none;
+      stroke:transparent;
+      stroke-width:9px;
+    }
+
+  }
+
+  .r6o-connections-edge:hover {
+
+    .r6o-connections-edge-path-inner {
+      stroke:#0064ff;
+    }
+
+    .r6o-connections-edge-base,
+    .r6o-connections-edge-head {
+      fill:#0064ff;
     }
 
   }
@@ -84,7 +112,6 @@ svg.r6o-connections-canvas {
     }
 
     .r6o-connections-handle {
-      pointer-events:auto;
       cursor:crosshair;
 
       .r6o-connections-handle-mousetrap {
