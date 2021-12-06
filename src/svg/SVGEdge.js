@@ -90,4 +90,7 @@ export default class SVGEdge extends EventEmitter {
   remove = () => 
     this.g.remove();
 
+  setData = bodies =>
+    this.edge.bodies = bodies;
+
 }

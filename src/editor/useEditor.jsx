@@ -24,13 +24,11 @@ const useEditor = (canvas, config) => {
   }
 
   const handleConnectionUpdated = (annotation, previous) => {
-    console.log('updated', annotation);
-    console.log('was', previous);
+    canvas.updateConnectionData(previous, annotation.bodies);
   }
 
   const handleConnectionDeleted = annotation => {
     canvas.removeConnection(annotation);
-    
     console.log('deleted', annotation);
   }
 

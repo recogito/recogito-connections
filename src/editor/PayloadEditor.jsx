@@ -28,7 +28,13 @@ export default class PayloadEditor extends Component {
   editConnection(connection, pos, isNew) {
     const top = pos.y;
     const left = pos.x;
-    this.setState({ connection, top, left, isNew });
+
+    console.log('editing', connection.bodies);
+
+    const inputValue = 
+      connection.bodies.find(b => b.purpose === 'tagging')?.value || '';
+
+    this.setState({ connection, top, left, isNew, inputValue });
   }
 
   onChange = inputValue =>
@@ -64,6 +70,7 @@ export default class PayloadEditor extends Component {
         <div className="r6o-connections-editor-input-wrapper">
           <Autocomplete 
             placeholder="Tag..."
+            initialValue={this.state.inputValue}
             onSubmit={this.onSubmit} 
             onChange={this.onChange}
             onCancel={this.close}
