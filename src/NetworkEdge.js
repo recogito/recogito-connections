@@ -7,6 +7,16 @@ export default class NetworkEdge {
     this.end = end;
   }
 
+  matchesAnnotation = annotation => {
+    if (!Array.isArray(annotation.targets))
+      return false;
+
+    const start = annotation.targets[0].id;
+    const end = annotation.targets[1].id;
+
+    return this.start.annotation.id === start && this.end.annotation.id === end;
+  }
+
   toAnnotation = () => WebAnnotation.create({
     target: [
       { id: this.start.annotation.id },

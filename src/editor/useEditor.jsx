@@ -19,17 +19,19 @@ const useEditor = (canvas, config) => {
   canvas.on('selectConnection', (connection, pos) =>
     editor.current.editConnection(connection, pos, false));
 
-
   const handleConnectionCreated = annotation => {
-
+    console.log('created', annotation);
   }
 
   const handleConnectionUpdated = (annotation, previous) => {
-
+    console.log('updated', annotation);
+    console.log('was', previous);
   }
 
   const handleConnectionDeleted = annotation => {
-
+    canvas.removeConnection(annotation);
+    
+    console.log('deleted', annotation);
   }
 
   // JSX editor component

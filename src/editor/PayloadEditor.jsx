@@ -13,28 +13,42 @@ export default class PayloadEditor extends Component {
       connection: null,
       top: 0,
       left: 0,
-      isNew: false
+      isNew: false,
+      inputValue: ''
     }
   }
-  
+
   editConnection(connection, pos, isNew) {
     const top = pos.y;
     const left = pos.x;
     this.setState({ connection, top, left, isNew });
   }
 
-  onSubmit = value => {
-    // TODO Update bodies!
-    const updated = connection;
+  onChange = inputValue =>
+    this.setState({ inputValue });
+
+  onSubmit = () => {
+    const updated = this.state.connection.clone({ body: {
+      type: 'TextualBody',
+      value: this.state.inputValue,
+      purpose: 'tagging' 
+    }});
 
     if (this.state.isNew)
       this.props.onConnectionCreated(updated);
     else
       this.props.onConnectionUpdated(updated, this.state.connection);
+
+    this.setState({ connection: null });
   }
 
   onCancel = () =>
     this.setState({ connection: null });
+
+  onDelete = () => {
+    this.props.onConnectionDeleted(this.state.connection);
+    this.setState({ connection: null });
+  }
 
   render() {
     return this.state.connection ? (
@@ -47,6 +61,7 @@ export default class PayloadEditor extends Component {
           <Autocomplete 
             placeholder="Tag..."
             onSubmit={this.onSubmit} 
+            onChange={this.onChange}
             onCancel={this.onCancel}
             vocabulary={this.props.vocabulary || []} />
         </div>
@@ -54,7 +69,7 @@ export default class PayloadEditor extends Component {
         <div className="r6o-connections-editor-buttons">
           <span 
             className="r6o-icon delete"
-            onClick={() => this.props.onConnectionDeleted(this.state.connection)}>
+            onClick={this.onDelete}>
             <TrashIcon width={14} />
           </span>
 
