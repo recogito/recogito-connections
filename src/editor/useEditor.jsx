@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import PayloadEditor from './PayloadEditor';
 
-const useEditor = (canvas, config) => {
+const useEditor = (canvas, emitter, config) => {
 
   // A div container to hold the editor
   const container = document.createElement('div');
@@ -20,16 +20,18 @@ const useEditor = (canvas, config) => {
     editor.current.editConnection(connection, pos, false));
 
   const handleConnectionCreated = annotation => {
-    console.log('created', annotation);
+    emitter.emit('createConnection', annotation.underlying);
+    canvas.updateConnectionData(annotation, annotation.bodies);
   }
 
   const handleConnectionUpdated = (annotation, previous) => {
+    emitter.emit('updateConnection', annotation.underlying, previous.underlying);
     canvas.updateConnectionData(previous, annotation.bodies);
   }
 
   const handleConnectionDeleted = annotation => {
+    emitter.emit('deleteConnection', annotation.underlying);
     canvas.removeConnection(annotation);
-    console.log('deleted', annotation);
   }
 
   // JSX editor component

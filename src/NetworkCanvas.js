@@ -229,8 +229,6 @@ export default class NetworkCanvas extends EventEmitter {
     const toUpdate = this.connections.find(c =>
       c.edge.matchesAnnotation(connection));
 
-    console.log(toUpdate, bodies);
-
     toUpdate.setData(bodies);
   }
 

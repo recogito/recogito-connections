@@ -5,6 +5,7 @@ export default class NetworkEdge {
   constructor(start, end) {
     this.start = start;
     this.end = end;
+    
     this.bodies = [];
   }
 
@@ -18,16 +19,12 @@ export default class NetworkEdge {
     return this.start.annotation.id === start && this.end.annotation.id === end;
   }
 
-  toAnnotation = () => {
-    console.log('toAnnotation', this.bodies);
-    
-    return WebAnnotation.create({
-      body: this.bodies,
-      target: [
-        { id: this.start.annotation.id },
-        { id: this.end.annotation.id }
-      ]
-    });
-  }
+  toAnnotation = () => WebAnnotation.create({
+    body: this.bodies,
+    target: [
+      { id: this.start.annotation.id },
+      { id: this.end.annotation.id }
+    ]
+  });
 
 }

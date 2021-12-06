@@ -9,6 +9,8 @@ export default class PayloadEditor extends Component {
   constructor(props) {
     super(props);
 
+    this.el = React.createRef();
+
     this.state = {
       connection: null,
       top: 0,
@@ -16,6 +18,11 @@ export default class PayloadEditor extends Component {
       isNew: false,
       inputValue: ''
     }
+  }
+
+  componentDidUpdate() {
+    if (this.el.current)
+      this.el.current.querySelector('input').focus();
   }
 
   close = () =>
@@ -28,8 +35,6 @@ export default class PayloadEditor extends Component {
   editConnection(connection, pos, isNew) {
     const top = pos.y;
     const left = pos.x;
-
-    console.log('editing', connection.bodies);
 
     const inputValue = 
       connection.bodies.find(b => b.purpose === 'tagging')?.value || '';
@@ -63,7 +68,7 @@ export default class PayloadEditor extends Component {
   render() {
     return this.state.connection ? (
       <div
-        ref={this.element}
+        ref={this.el}
         style={{ top: this.state.top, left: this.state.left }} 
         className="r6o-connections-editor">
 

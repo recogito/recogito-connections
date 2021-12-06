@@ -1,5 +1,4 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import EventEmitter from 'tiny-emitter';
 import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
 
 import NetworkCanvas from './NetworkCanvas';
@@ -15,9 +14,10 @@ const isConnection = annotation => {
   return targets.every(t => t.id);
 }
 
-class ConnectionsPlugin {
+class ConnectionsPlugin extends EventEmitter {
 
   constructor(instances, conf) {
+    super();
     
     // Configuration options
     const config = conf || {};
@@ -52,19 +52,7 @@ class ConnectionsPlugin {
   
 
     if (config.useEditor)
-      useEditor(this.canvas, config); 
-  }
-
-  on = (event, handler) => {
-    // this.canvas.on(event, handler);
-  }
-
-  off = (event, handler) => {
-    // this.canvas.off(event, handler);
-  }
-
-  once = (event, handler) => {
-    // this.canvas.once(event, handler);
+      useEditor(this.canvas, this, config); 
   }
 
 }
