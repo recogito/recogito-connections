@@ -1,6 +1,6 @@
 {
   "name": "@recogito/recogito-connections",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A plugin for drawing connections between annotations",
   "main": "dist/recogito-connections.js",
   "scripts": {
