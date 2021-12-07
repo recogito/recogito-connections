@@ -2,8 +2,12 @@ import React, { Component } from 'react';
 import Autocomplete from '@recogito/recogito-client-core/src/editor/widgets/Autocomplete';
 import { TrashIcon, CheckIcon } from '@recogito/recogito-client-core/src/Icons';
 
-import './PayloadEditor.scss';
+import './RelationEditor.scss';
 
+/**
+ * A simple editor for adding a single relation tag body
+ * to a connection.
+ */
 export default class PayloadEditor extends Component {
 
   constructor(props) {
@@ -25,12 +29,12 @@ export default class PayloadEditor extends Component {
       this.el.current.querySelector('input').focus();
   }
 
-  close = () =>
+  close = optCallback =>
     this.setState({
       connection: null,
       isNew: false,
       inputValue: ''
-    });
+    }, () => optCallback && optCallback());
 
   editConnection(connection, pos, isNew) {
     const top = pos.y;
@@ -39,7 +43,13 @@ export default class PayloadEditor extends Component {
     const inputValue = 
       connection.bodies.find(b => b.purpose === 'tagging')?.value || '';
 
-    this.setState({ connection, top, left, isNew, inputValue });
+    const setState = () =>
+      this.setState({ connection, top, left, isNew, inputValue });
+  
+    if (this.state.connection)
+      this.close(setState); // Close first, so that the Autocomplete re-renders initial value
+    else
+      setState();
   }
 
   onChange = inputValue =>

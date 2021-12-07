@@ -39,6 +39,16 @@ export default class NetworkCanvas extends EventEmitter {
     this.currentFloatingEdge = null;
   }
 
+  addEdge = edge => {
+    const svgEdge = new SVGEdge(edge, this.svg);
+
+    svgEdge.on('click', () =>
+      this.emit('selectConnection', edge.toAnnotation(), svgEdge.midpoint));
+
+    this.connections.push(svgEdge);
+    return svgEdge;
+  }
+
   /** 
    * Deletes all connections connected to the annotation
    * with the given ID.
@@ -107,6 +117,34 @@ export default class NetworkCanvas extends EventEmitter {
     hover.on('mouseout', this.onLeaveAnnotation);
   }
 
+  onCancelConnection = () => {
+    this.currentFloatingEdge.remove();
+    this.currentFloatingEdge = null;
+
+    this.instances.forEach(i => i.disableSelect = false);
+
+    document.body.classList.remove('r6o-hide-cursor');
+  }
+
+  onCompleteConnection = () => {
+    const { start, end } = this.currentFloatingEdge;
+
+    const edge = new NetworkEdge(start, end);
+
+    const annotation = edge.toAnnotation();
+
+    const svgEdge = this.addEdge(edge);
+
+    this.emit('createConnection', annotation, svgEdge.midpoint);
+    
+    setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
+
+    document.body.classList.remove('r6o-hide-cursor');
+
+    this.currentFloatingEdge.remove();
+    this.currentFloatingEdge = null;
+  }
+
   /**
    * When entering an annotation show hover emphasis. If there's no
    * dragged arrow, show connection handle. If there is a dragged 
@@ -156,48 +194,6 @@ export default class NetworkCanvas extends EventEmitter {
 
     // Disable selection on RecogitoJS/Annotorious
     this.instances.forEach(i => i.disableSelect = true);
-  }
-
-  addEdge = edge => {
-    const svgEdge = new SVGEdge(edge, this.svg);
-
-    svgEdge.on('click', () =>
-      this.emit('selectConnection', edge.toAnnotation(), svgEdge.midpoint));
-
-    this.connections.push(svgEdge);
-    return svgEdge;
-  }
-
-  /**
-   * TODO we still need to incorporate an editor for the 
-   * connection body payload.
-   */
-  onCompleteConnection = () => {
-    const { start, end } = this.currentFloatingEdge;
-
-    const edge = new NetworkEdge(start, end);
-
-    const annotation = edge.toAnnotation();
-
-    const svgEdge = this.addEdge(edge);
-
-    this.emit('createConnection', annotation, svgEdge.midpoint);
-    
-    setTimeout(() => this.instances.forEach(i => i.disableSelect = false), 100);
-
-    document.body.classList.remove('r6o-hide-cursor');
-
-    this.currentFloatingEdge.remove();
-    this.currentFloatingEdge = null;
-  }
-
-  onCancelConnection = () => {
-    this.currentFloatingEdge.remove();
-    this.currentFloatingEdge = null;
-
-    this.instances.forEach(i => i.disableSelect = false);
-
-    document.body.classList.remove('r6o-hide-cursor');
   }
 
   redraw = reflow => {

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import PayloadEditor from './PayloadEditor';
+import RelationEditor from './RelationEditor';
 
-const useEditor = (canvas, emitter, config) => {
+const mountEditor = (canvas, emitter, config) => {
 
   // A div container to hold the editor
   const container = document.createElement('div');
@@ -36,7 +36,7 @@ const useEditor = (canvas, emitter, config) => {
 
   // JSX editor component
   ReactDOM.render(
-    <PayloadEditor 
+    <RelationEditor 
       ref={editor} 
       config={config} 
       onConnectionCreated={handleConnectionCreated}
@@ -45,4 +45,4 @@ const useEditor = (canvas, emitter, config) => {
 
 }
 
-export default useEditor;
+export default mountEditor;
