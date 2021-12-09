@@ -62,6 +62,16 @@ class ConnectionsPlugin extends EventEmitter {
       this.canvas.deleteConnectionsForId(annotation.id));
   }
 
+  register = instance => {
+    this.patchInstance(instance);
+    this.instances.push(instance);
+  }
+
+  unregister = instance => {
+    // TODO need to remove patching!
+    this.instances = this.instances.filter(i => i !== instance);
+  }
+
 }
 
 export default (instances, config) => new ConnectionsPlugin(instances, config);
