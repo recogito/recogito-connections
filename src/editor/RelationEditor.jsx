@@ -37,8 +37,8 @@ export default class PayloadEditor extends Component {
     }, () => optCallback && optCallback());
 
   editConnection(connection, pos, isNew) {
-    const top = pos.y;
-    const left = pos.x;
+    const top = pos.y + window.scrollY;
+    const left = pos.x + window.scrollX;
 
     const inputValue = 
       connection.bodies.find(b => b.purpose === 'tagging')?.value || '';
