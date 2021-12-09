@@ -16,8 +16,10 @@ const isConnection = annotation => {
 
 class ConnectionsPlugin extends EventEmitter {
 
-  constructor(instances, conf) {
+  constructor(arg, conf) {
     super();
+
+    const instances = arg || [];
     
     // Configuration options
     const config = conf || {};
@@ -64,12 +66,15 @@ class ConnectionsPlugin extends EventEmitter {
 
   register = instance => {
     this.patchInstance(instance);
+    this.canvas.registerInstance(instance);
+
     this.instances.push(instance);
   }
 
   unregister = instance => {
     // TODO need to remove patching!
     this.instances = this.instances.filter(i => i !== instance);
+    this.canvas.unregisterInstance(instance);
   }
 
 }

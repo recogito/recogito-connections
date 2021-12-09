@@ -206,6 +206,9 @@ export default class NetworkCanvas extends EventEmitter {
     this.connections.forEach(connection => connection.redraw());
   }
 
+  registerInstance = instance =>
+    this.instances.push(instance);
+
   removeConnection = connection => {
     const toRemove = this.connections.find(c => 
       c.edge.matchesAnnotation(connection));
@@ -220,6 +223,9 @@ export default class NetworkCanvas extends EventEmitter {
     const end = NetworkNode.findById(a.targets[1].id);
     this.addEdge(new NetworkEdge(start, end));
   });
+
+  unregisterInstance = instance => 
+    this.instances = this.instances.filter(i => i !== instance);
 
   updateConnectionData = (connection, bodies) => {
     const toUpdate = this.connections.find(c =>

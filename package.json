@@ -2,7 +2,7 @@
   "name": "@recogito/recogito-connections",
   "version": "0.1.2",
   "description": "A plugin for drawing connections between annotations",
-  "main": "dist/recogito-connections.js",
+  "main": "src/index.jsx",
   "scripts": {
     "start": "webpack serve --open --mode=development",
     "build": "webpack --mode=production"

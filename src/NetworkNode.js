@@ -45,7 +45,7 @@ export default class NetworkNode {
   }
 
   /**
-   * The polygon faces the annotation is represented by.
+   * The polygon faces the annotation is represented by in the DOM.
    * Note that an annotation might render as multiple DOM elements,
    * and DOM elements != polygon faces. Typical case: an overlapping
    * text annotation consists of multiple spans, but those would
@@ -64,7 +64,7 @@ export default class NetworkNode {
     }
 
     // Merge all client-rects to one multi-polygon
-    return mergePolygons(rects.map(rect => {
+    return rects.length > 0 ? mergePolygons(rects.map(rect => {
       const { x, y, width, height } = rect;
 
       return new Polygon([
@@ -73,7 +73,7 @@ export default class NetworkNode {
         new Point(x + width, y + height),
         new Point(x, y + height)
       ]); 
-    })).faces;  
+    })).faces : null;
   }
 
   /**
@@ -83,11 +83,17 @@ export default class NetworkNode {
     // From the multipolygon, find the face that's currently
     // under the given coordinate
     const box = new Box(xy.x - 1, xy.y - 1, xy.x + 1, xy.y + 1);
-    const [ intersecting, ] = this.faces.search(box);
+    const [ intersecting, ] = this.faces?.search(box) || [];
     return intersecting;
   }
 
   getAttachableRect = optReference => {
+    // Just a bit of defensive programming - users
+    // might deregister an instance, and then there wouldn't
+    // be any faces for a node.
+    if (!this.faces)
+      return;
+
     const faces = Array.from(this.faces);
 
     if (this.xy) {
