@@ -10,15 +10,9 @@ import SVGHoveredNode from './svg/SVGHoveredNode';
 import './NetworkCanvas.scss';
 
 /** Checks if the given DOM element represents an annotation **/
-const isAnnotation = element => {
-  // RecogitoJS
-  const isTextAnnotation = element.classList?.contains('r6o-annotation');
-  if (isTextAnnotation)
-    return true;
-  
-  // Annotorious
-  return element.closest('.a9s-annotation');
-}
+const isAnnotation = element =>
+  element.classList?.contains('r6o-annotation') ||
+  element.closest('.a9s-annotation');
 
 /** Checks if the given DOM element is a connection handle **/
 const isHandle = element =>
@@ -80,7 +74,6 @@ export default class NetworkCanvas extends EventEmitter {
     }
 
     document.addEventListener('mouseover', evt => {
-      console.log(evt.target, evt.target.closest('.a9s-annotation'));
       if (isAnnotation(evt.target))
         this.onEnterAnnotation(evt);
     }, opts);
