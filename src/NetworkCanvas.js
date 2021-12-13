@@ -10,8 +10,15 @@ import SVGHoveredNode from './svg/SVGHoveredNode';
 import './NetworkCanvas.scss';
 
 /** Checks if the given DOM element represents an annotation **/
-const isAnnotation = element =>
-  element.classList?.contains('r6o-annotation');
+const isAnnotation = element => {
+  // RecogitoJS
+  const isTextAnnotation = element.classList?.contains('r6o-annotation');
+  if (isTextAnnotation)
+    return true;
+  
+  // Annotorious
+  return element.closest('.a9s-annotation');
+}
 
 /** Checks if the given DOM element is a connection handle **/
 const isHandle = element =>
@@ -73,6 +80,7 @@ export default class NetworkCanvas extends EventEmitter {
     }
 
     document.addEventListener('mouseover', evt => {
+      console.log(evt.target, evt.target.closest('.a9s-annotation'));
       if (isAnnotation(evt.target))
         this.onEnterAnnotation(evt);
     }, opts);
@@ -110,6 +118,14 @@ export default class NetworkCanvas extends EventEmitter {
 
       resizeObserver.observe(this.svg.node.parentNode);
     }
+
+    this.instances.forEach(instance => {
+      instance.on('changeSelectionTarget', target => {
+        // TODO only redraw if the target has connections!
+        // TODO only redraw affected connections
+        this.redraw();
+      })
+    });
   }
 
   initHoverEvents = hover => {
@@ -151,7 +167,7 @@ export default class NetworkCanvas extends EventEmitter {
    * arrow, snap it.
    */
   onEnterAnnotation = evt => {
-    const { annotation } = evt.target;
+    const annotation = evt.target?.annotation || evt.target.closest('.a9s-annotation')?.annotation;
     const { clientX, clientY } = evt;
 
     // Destroy previous hover, if any
