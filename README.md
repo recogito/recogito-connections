@@ -20,6 +20,9 @@ window.onload = function() {
 
   var connections = recogito.Connections(r);
 
+  // Load highlights and connections
+  r.loadAnnotation('annotations.w3c.json');
+
   connections.on('createConnection', function(c) {
     console.log('created', c);
   });
@@ -32,6 +35,25 @@ window.onload = function() {
     console.log('deleted', c);
   });
 };
+```
+
+## Annotation Format
+
+Connections are represented as standard web annotations. The difference to text highlights is that
+the `target` property of connection annotations points to the IDs of the two annotations it connects.
+Example:
+
+```json
+{
+  "@context": "http://www.w3.org/ns/anno.jsonld",
+  "type": "Annotation",
+  "id": "#connection-1",
+  "body": [],
+  "target": [
+    { "id": "#highlight-1" },
+    { "id": "#highlight-2" }
+  ]
+}
 ```
 
 ## Development
