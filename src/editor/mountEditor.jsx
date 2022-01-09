@@ -7,7 +7,7 @@ const mountEditor = (canvas, emitter, config) => {
 
   // A div container to hold the editor
   const container = document.createElement('div');
-  document.body.appendChild(container);
+  document.getElementsByTagName('body')[0].appendChild(container);
 
   // React editor ref
   const editor = React.createRef();
