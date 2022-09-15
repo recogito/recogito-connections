@@ -60,8 +60,12 @@ class ConnectionsPlugin extends EventEmitter {
 
     // When annotations are deleted, also delete
     // in-/outgoing connections
-    instance.on('deleteAnnotation', annotation =>
-      this.canvas.deleteConnectionsForId(annotation.id));
+    instance.on('deleteAnnotation', annotation => {
+      const deleted = this.canvas.deleteConnectionsForId(annotation.id);
+      deleted.forEach(annotation => {
+        this.emit('deleteConnection', annotation.underlying);
+      });
+    });
   }
 
   register = instance => {

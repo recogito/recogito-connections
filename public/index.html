@@ -66,11 +66,17 @@
 
         var connections = recogito.Connections([ r, a ], { useEditor: true });
 
-        /*
         connections.on('createConnection', function(c) {
-          console.log('created', JSON.stringify(c));
+          console.log('created', c);
         });
-        */
+        
+        connections.on('updateConnection', function(updated, previous) {
+          console.log('updated', updated, previous);
+        });
+
+        connections.on('deleteConnection', function(c) {
+          console.log('deleted', c);
+        });
 
         // r.loadAnnotations('annotations.w3c.json');
       };

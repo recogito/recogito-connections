@@ -52,19 +52,25 @@ export default class NetworkCanvas extends EventEmitter {
 
   /** 
    * Deletes all connections connected to the annotation
-   * with the given ID.
+   * with the given ID. Returns the deleted connections.
    */
   deleteConnectionsForId = id => {
-    this.connections = this.connections.filter(conn => {
+    const toDelete = this.connections.filter(conn => {
       const start = conn.edge.start.annotation.id;
       const end = conn.edge.end.annotation.id;
+      return start === id || end === id;
+    });
 
-      const toDelete = start === id || end === id;
-      if (toDelete)
+    // Delete connections marked for deletion
+    this.connections = this.connections.filter(conn => {      
+      const markedForDelete = toDelete.includes(conn);
+      if (markedForDelete)
         conn.remove();
 
-      return !toDelete;
+      return !markedForDelete;
     });
+
+    return toDelete.map(conn => conn.edge.toAnnotation());
   }
 
   initGlobalEvents = () => {
