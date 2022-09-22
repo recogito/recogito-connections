@@ -89,7 +89,7 @@ export default class PayloadEditor extends Component {
             onSubmit={this.onSubmit} 
             onChange={this.onChange}
             onCancel={this.close}
-            vocabulary={this.props.vocabulary || []} />
+            vocabulary={this.props.config.vocabulary || []} />
         </div>
 
         <div className="r6o-connections-editor-buttons">
