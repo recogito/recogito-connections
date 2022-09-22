@@ -33,8 +33,8 @@ class ConnectionsPlugin extends EventEmitter {
 
     this.instances.forEach(this.patchInstance);
   
-    // TODO if (config.useEditor)
-    mountEditor(this.canvas, this, config); 
+    if (!config.disableEditor)
+      mountEditor(this.canvas, this, config); 
   }
 
   /**
