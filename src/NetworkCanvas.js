@@ -21,11 +21,13 @@ const isHandle = element =>
 
 export default class NetworkCanvas extends EventEmitter {
 
-  constructor(instances) {
+  constructor(instances, config) {
     super();
 
     // List of RecogitoJS/Annotorious instances
     this.instances = instances;
+
+    this.config = config;
 
     this.svg = SVG().addTo('body');
     this.svg.attr('class', 'r6o-connections-canvas');
@@ -42,7 +44,7 @@ export default class NetworkCanvas extends EventEmitter {
   }
 
   addEdge = edge => {
-    const svgEdge = new SVGEdge(edge, this.svg);
+    const svgEdge = new SVGEdge(edge, this.svg, this.config);
 
     svgEdge.on('click', () =>
       this.emit('selectConnection', edge.toAnnotation(), svgEdge.midpoint));

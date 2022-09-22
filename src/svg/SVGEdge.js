@@ -9,7 +9,7 @@ import { ARROW_CONFIG } from './Config';
  */
 export default class SVGEdge extends EventEmitter {
 
-  constructor(edge, svg) {
+  constructor(edge, svg, config) {
     super();
 
     this.edge = edge;
@@ -39,6 +39,29 @@ export default class SVGEdge extends EventEmitter {
     // Edge head is a triangle
     this.g.polygon('0,-6 12,0, 0,6')
       .attr('class', 'r6o-connections-edge-head');
+
+    const firstTag = edge.bodies
+      .find(b => b.purpose === 'tagging');
+
+    if (firstTag && config.showLabels) {
+      const label = this.g.group()
+        .attr('class', 'r6o-connections-edge-label');
+
+      const rect = label.rect();
+
+      const text = label.text(firstTag.value)
+        .attr('y', 4.5);
+      
+      const { width, height } = text.node.getBBox();
+
+      rect
+        .attr('x', -5.5)
+        .attr('y', - Math.round(height / 2) - 1.5)
+        .attr('rx', 2)
+        .attr('ry', 2)
+        .attr('width', Math.round(width) + 10)
+        .attr('height', Math.round(height) + 4);
+    }
 
     // Initial render
     this.redraw();
@@ -76,6 +99,11 @@ export default class SVGEdge extends EventEmitter {
       // Arrow head
       this.g.find('polygon')
         .attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
+
+      // Label (if any)
+      const label = this.g.find('.r6o-connections-edge-label');
+      if (label)
+        label.attr('transform', `translate(${cx},${cy})`);
 
       // Expose essential anchor points
       this.startpoint = { x: sx, y: sy };

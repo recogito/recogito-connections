@@ -30,7 +30,7 @@ class ConnectionsPlugin extends EventEmitter {
       instances : [ instances ];
 
     // Single network canvas, covering the browser viewport
-    this.canvas = new NetworkCanvas(this.instances);
+    this.canvas = new NetworkCanvas(this.instances, config);
 
     this.instances.forEach(this.patchInstance);
   

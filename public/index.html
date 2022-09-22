@@ -63,7 +63,9 @@
           image: 'hallstatt'
         });
 
-        var connections = recogito.Connections([ r, a ]);
+        var connections = recogito.Connections([ r, a ], {
+          showLabels: true
+        });
 
         connections.on('createConnection', function(c) {
           console.log('created', c);
