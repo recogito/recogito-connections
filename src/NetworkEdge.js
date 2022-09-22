@@ -2,7 +2,9 @@ import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
 
 export default class NetworkEdge {
 
-  constructor(start, end) {
+  constructor(id, start, end) {
+    this.id = id;
+
     this.start = start;
     this.end = end;
     
@@ -20,6 +22,7 @@ export default class NetworkEdge {
   }
 
   toAnnotation = () => WebAnnotation.create({
+    id: this.id,
     body: this.bodies,
     motivation: 'linking',
     target: [

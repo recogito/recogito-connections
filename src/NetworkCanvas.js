@@ -1,5 +1,6 @@
 import { SVG } from '@svgdotjs/svg.js';
 import EventEmitter from 'tiny-emitter';
+import { v4 as uuid } from 'uuid';
 
 import NetworkEdge from './NetworkEdge';
 import NetworkNode from './NetworkNode';
@@ -144,7 +145,9 @@ export default class NetworkCanvas extends EventEmitter {
   onCompleteConnection = () => {
     const { start, end } = this.currentFloatingEdge;
 
-    const edge = new NetworkEdge(start, end);
+    const id = `#${uuid()}`;
+
+    const edge = new NetworkEdge(id, start, end);
 
     const annotation = edge.toAnnotation();
 
@@ -236,7 +239,7 @@ export default class NetworkCanvas extends EventEmitter {
   setAnnotations = annotations => annotations.forEach(a => {
     const start = NetworkNode.findById(a.targets[0].id);
     const end = NetworkNode.findById(a.targets[1].id);
-    this.addEdge(new NetworkEdge(start, end));
+    this.addEdge(new NetworkEdge(a.id, start, end));
   });
 
   unregisterInstance = instance => 
