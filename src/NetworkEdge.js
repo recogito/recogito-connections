@@ -2,13 +2,13 @@ import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
 
 export default class NetworkEdge {
 
-  constructor(id, start, end) {
+  constructor(id, start, end, bodies) {
     this.id = id;
 
     this.start = start;
     this.end = end;
     
-    this.bodies = [];
+    this.bodies = bodies || [];
   }
 
   matchesAnnotation = annotation => {

@@ -239,7 +239,7 @@ export default class NetworkCanvas extends EventEmitter {
   setAnnotations = annotations => annotations.forEach(a => {
     const start = NetworkNode.findById(a.targets[0].id);
     const end = NetworkNode.findById(a.targets[1].id);
-    this.addEdge(new NetworkEdge(a.id, start, end));
+    this.addEdge(new NetworkEdge(a.id, start, end, a.bodies));
   });
 
   unregisterInstance = instance => 

@@ -6,7 +6,8 @@ import mountEditor from './editor/mountEditor';
 
 /** Checks if the given annotation represents a connection **/
 const isConnection = annotation => {
-  const { targets } = annotation;
+  const targets = Array.isArray(annotation.target) ?
+    annotation.target : [ annotation.target ];
 
   if (targets.length !== 2)
     return false;
@@ -45,18 +46,20 @@ class ConnectionsPlugin extends EventEmitter {
     // Intercept setAnnotation API method
     const _setAnnotations = instance.setAnnotations;
 
-    instance.setAnnotations = arg =>
+    instance.setAnnotations = arg => {
+      const all = (arg || []);
+
+      // Split text annotations from connections
+      const annotations = all.filter(a => !isConnection(a));
+      const connections = all.filter(a => isConnection(a));
+      
       // Set annotations on instance first
-      _setAnnotations(arg).then(() => {
+      return _setAnnotations(annotations).then(() => {
         // Then create relations
-        const annotations = arg || []; // Allow null arg
-  
-        const connections = annotations
-          .map(a => new WebAnnotation(a))
-          .filter(isConnection);
-  
-        this.canvas.setAnnotations(connections);
+        const wrapped = connections.map(a => new WebAnnotation(a));
+        this.canvas.setAnnotations(wrapped);
       });
+    }
 
     // When annotations are deleted, also delete
     // in-/outgoing connections

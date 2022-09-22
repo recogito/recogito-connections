@@ -102,11 +102,11 @@
     "@context": "http://www.w3.org/ns/anno.jsonld",
     "type": "Annotation",
     "id": "#relation-1",
-    "body": [{
+    "body": {
       "type": "TextualBody",
       "value": "MyTag",
       "purpose": "tagging"
-    }],
+    },
     "motivation": "linking",
     "target": [
       {
