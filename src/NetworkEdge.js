@@ -21,6 +21,7 @@ export default class NetworkEdge {
 
   toAnnotation = () => WebAnnotation.create({
     body: this.bodies,
+    motivation: 'linking',
     target: [
       { id: this.start.annotation.id },
       { id: this.end.annotation.id }
