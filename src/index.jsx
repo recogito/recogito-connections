@@ -73,6 +73,7 @@ class ConnectionsPlugin extends EventEmitter {
 
   register = instance => {
     this.patchInstance(instance);
+
     this.canvas.registerInstance(instance);
 
     this.instances.push(instance);

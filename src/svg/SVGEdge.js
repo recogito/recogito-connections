@@ -14,6 +14,8 @@ export default class SVGEdge extends EventEmitter {
 
     this.edge = edge;
 
+    this.config = config;
+
     this.g = svg.group()
       .attr('class', 'r6o-connections-edge has-events')
       .click(() => this.emit('click', this.edge));
@@ -40,31 +42,43 @@ export default class SVGEdge extends EventEmitter {
     this.g.polygon('0,-6 12,0, 0,6')
       .attr('class', 'r6o-connections-edge-head');
 
-    const firstTag = edge.bodies
-      .find(b => b.purpose === 'tagging');
-
-    if (firstTag && config.showLabels) {
+    if (config.showLabels) {
       const label = this.g.group()
-        .attr('class', 'r6o-connections-edge-label');
+        .attr('class', 'r6o-connections-edge-label')
+        .attr('style', 'display: none');
 
-      const rect = label.rect();
+      label.rect();
+      label.text().attr('y', 4.5);
 
-      const text = label.text(firstTag.value)
-        .attr('y', 4.5);
-      
-      const { width, height } = text.node.getBBox();
 
-      rect
+      this.updateLabel();
+    }
+
+    // Initial render
+    this.redraw();
+  }
+
+  updateLabel = () => {
+    const label = this.g.find('.r6o-connections-edge-label');
+
+    // Note that firstTag will be null if this as newly-dragged connection!
+    const firstTag = this.edge.bodies
+      .find(b => b.purpose === 'tagging') || { value: 'foo' };
+  
+    if (label && firstTag) {
+      const text = label.find('text').text(firstTag.value);
+      const { width, height } = text[0][0].node.getBBox();
+
+      label.find('rect')
         .attr('x', -5.5)
         .attr('y', - Math.round(height / 2) - 1.5)
         .attr('rx', 2)
         .attr('ry', 2)
         .attr('width', Math.round(width) + 10)
         .attr('height', Math.round(height) + 4);
-    }
 
-    // Initial render
-    this.redraw();
+      label.attr('style', null);
+    }
   }
 
   redraw = () => {
@@ -122,7 +136,11 @@ export default class SVGEdge extends EventEmitter {
   remove = () => 
     this.g.remove();
 
-  setData = bodies =>
+  setData = bodies => {
     this.edge.bodies = bodies;
+  
+    if (this.config.showLabels)
+      this.updateLabel();
+  }
 
 }
