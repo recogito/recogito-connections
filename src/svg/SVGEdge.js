@@ -63,10 +63,10 @@ export default class SVGEdge extends EventEmitter {
 
     // Note that firstTag will be null if this as newly-dragged connection!
     const firstTag = this.edge.bodies
-      .find(b => b.purpose === 'tagging') || { value: 'foo' };
+      .find(b => b.purpose === 'tagging')?.value;
   
     if (label && firstTag) {
-      const text = label.find('text').text(firstTag.value);
+      const text = label.find('text').text(firstTag);
       const { width, height } = text[0][0].node.getBBox();
 
       label.find('rect')
@@ -78,6 +78,8 @@ export default class SVGEdge extends EventEmitter {
         .attr('height', Math.round(height) + 4);
 
       label.attr('style', null);
+    } else {
+      label.attr('style', 'display: none');
     }
   }
 
