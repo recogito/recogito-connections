@@ -67,15 +67,18 @@ export default class SVGEdge extends EventEmitter {
   
     if (label && firstTag) {
       const text = label.find('text').text(firstTag);
-      const { width, height } = text[0][0].node.getBBox();
 
-      label.find('rect')
+      setTimeout(() => {
+        const { width, height } = text[0][0].node.getBBox();
+
+        label.find('rect')
         .attr('x', -5.5)
         .attr('y', - Math.round(height / 2) - 1.5)
         .attr('rx', 2)
         .attr('ry', 2)
         .attr('width', Math.round(width) + 10)
         .attr('height', Math.round(height) + 4);
+      }, 1);
 
       label.attr('style', null);
     } else {
