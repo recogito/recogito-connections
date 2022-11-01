@@ -64,7 +64,9 @@ export default class NetworkNode {
     }
 
     // Merge all client-rects to one multi-polygon
-    return rects.length > 0 ? mergePolygons(rects.map(rect => {
+    return rects.length > 0 ? mergePolygons(rects
+      .filter(rect => rect.width > 0 && rect.height > 0)
+      .map(rect => {
       const { x, y, width, height } = rect;
 
       return new Polygon([
