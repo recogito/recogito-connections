@@ -91,46 +91,49 @@ export default class SVGEdge extends EventEmitter {
     const end = start ? this.edge.end.getAttachableRect(start) : null;
     start = end ? this.edge.start.getAttachableRect(end) : null;
 
-    if (start && end) {
-      const [ sx, sy, cx, cy, ex, ey, ae, ] = getBoxToBoxArrow(
-        start.x,
-        start.y,
-        start.width,
-        start.height,
-        end.x,
-        end.y,
-        end.width || 0,
-        end.height || 0,
-        ARROW_CONFIG
-      );
-
-      const endAngleAsDegrees = ae * (180 / Math.PI);
-
-      // Base circle
-      this.g.find('circle')
-        .attr('cx', sx)
-        .attr('cy', sy);
-
-      // Inner and outer paths
-      this.g.find('path')
-        .attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
-
-      // Arrow head
-      this.g.find('polygon')
-        .attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
-
-      // Label (if any)
-      const label = this.g.find('.r6o-connections-edge-label');
-      if (label)
-        label.attr('transform', `translate(${cx},${cy})`);
-
-      // Expose essential anchor points
-      this.startpoint = { x: sx, y: sy };
-      this.midpoint = { x: cx, y: cy };
-      this.endpoint = { x: ex, y: ey };
-    } else {
-      // TODO hide
+    if (!start || !end) {
+      this.g.addClass('r6o-connections-hidden');
+      return;
     }
+
+    this.g.removeClass('r6o-connections-hidden');
+
+    const [ sx, sy, cx, cy, ex, ey, ae, ] = getBoxToBoxArrow(
+      start.x,
+      start.y,
+      start.width,
+      start.height,
+      end.x,
+      end.y,
+      end.width || 0,
+      end.height || 0,
+      ARROW_CONFIG
+    );
+
+    const endAngleAsDegrees = ae * (180 / Math.PI);
+
+    // Base circle
+    this.g.find('circle')
+      .attr('cx', sx)
+      .attr('cy', sy);
+
+    // Inner and outer paths
+    this.g.find('path')
+      .attr('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
+
+    // Arrow head
+    this.g.find('polygon')
+      .attr('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
+
+    // Label (if any)
+    const label = this.g.find('.r6o-connections-edge-label');
+    if (label)
+      label.attr('transform', `translate(${cx},${cy})`);
+
+    // Expose essential anchor points
+    this.startpoint = { x: sx, y: sy };
+    this.midpoint = { x: cx, y: cy };
+    this.endpoint = { x: ex, y: ey };
   }
 
   resetAttachment = () => {
