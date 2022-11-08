@@ -18,6 +18,7 @@ export default class SVGEdge extends EventEmitter {
 
     this.g = svg.group()
       .attr('class', 'r6o-connections-edge has-events')
+      .attr('data-id', edge.id)
       .click(() => this.emit('click', this.edge));
 
     // Edge path
