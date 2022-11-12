@@ -93,10 +93,14 @@ export default class NetworkNode {
     // Just a bit of defensive programming - users
     // might deregister an instance, and then there wouldn't
     // be any faces for a node.
-    if (!this.faces)
+    if (!this.faces) {
       return;
+    }
 
     const faces = Array.from(this.faces);
+    if (faces.length === 0) {
+      return;
+    }
 
     if (this.xy) {
       const f = this.getFaceUnderPoint(this.xy);

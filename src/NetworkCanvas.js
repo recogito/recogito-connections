@@ -192,7 +192,7 @@ export default class NetworkCanvas extends EventEmitter {
   }
 
   onLeaveAnnotation = () =>  {
-    this.currentHover.remove();
+    this.currentHover?.remove();
     this.currentHover = null;
   }
 
@@ -241,6 +241,10 @@ export default class NetworkCanvas extends EventEmitter {
   setAnnotations = annotations => annotations.forEach(a => {
     const start = NetworkNode.findById(a.targets[0].id);
     const end = NetworkNode.findById(a.targets[1].id);
+    if (!start || !end) {
+      console.warn('Could not find start or end node for annotation', a);
+      return; 
+    }
     this.addEdge(new NetworkEdge(a.id, start, end, a.bodies));
   });
 
