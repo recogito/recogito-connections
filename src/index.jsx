@@ -45,7 +45,6 @@ class ConnectionsPlugin extends EventEmitter {
 
     // Intercept + monkeypatch API methods
     const _setAnnotations = instance.setAnnotations;
-    const _destroy = instance.destroy;
 
     instance.setAnnotations = arg => {
       const all = (arg || []);
@@ -60,11 +59,6 @@ class ConnectionsPlugin extends EventEmitter {
         const wrapped = connections.map(a => new WebAnnotation(a));
         this.canvas.setAnnotations(wrapped);
       });
-    }
-
-    instance.destroy = arg => {
-      this.canvas.destroy();
-      _destroy();
     }
 
     // When annotations are deleted, also delete
