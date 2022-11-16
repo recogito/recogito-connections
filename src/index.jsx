@@ -1,6 +1,5 @@
 import EventEmitter from 'tiny-emitter';
 import WebAnnotation from '@recogito/recogito-client-core/src/WebAnnotation';
-
 import NetworkCanvas from './NetworkCanvas';
 import mountEditor from './editor/mountEditor';
 
@@ -69,6 +68,10 @@ class ConnectionsPlugin extends EventEmitter {
         this.emit('deleteConnection', annotation.underlying);
       });
     });
+  }
+
+  destroy = () => {
+    this.canvas.destroy();
   }
 
   register = instance => {
