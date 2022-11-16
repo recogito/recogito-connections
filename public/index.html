@@ -32,6 +32,8 @@
   <body>
     <img id="hallstatt" src="640px-Hallstatt.jpg">
 
+    <button id="dbg">DEBUG</button>
+
     <div id="content" class="plaintext">
       <h1>Homer: The Odyssey</h1>
       <p>
@@ -80,6 +82,10 @@
         });
 
         r.loadAnnotations('annotations.w3c.json');
+
+        document.getElementById('dbg').addEventListener('click', function() {
+          r.destroy();
+        });
       };
     </script>
   </body>

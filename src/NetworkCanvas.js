@@ -76,6 +76,10 @@ export default class NetworkCanvas extends EventEmitter {
     return toDelete.map(conn => conn.edge.toAnnotation());
   }
 
+  destroy = () => {
+    this.svg.remove();
+  }
+
   initGlobalEvents = () => {
     const opts = {
       capture: true,
