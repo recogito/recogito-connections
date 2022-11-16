@@ -52,13 +52,16 @@ export default class PayloadEditor extends Component {
       setState();
   }
 
-  onChange = inputValue =>
+  onChange = inputValue => {
+    this.setState({ inputValue });
+  }
+
+  onSubmit = inputValue => {
     this.setState({ inputValue });
 
-  onSubmit = () => {
     const updated = this.state.connection.clone({ body: {
       type: 'TextualBody',
-      value: this.state.inputValue,
+      value: inputValue,
       purpose: 'tagging' 
     }});
 
