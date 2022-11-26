@@ -56,8 +56,11 @@ export default class PayloadEditor extends Component {
     this.setState({ inputValue });
   }
 
-  onSubmit = inputValue => {
-    this.setState({ inputValue });
+  onSubmit = value => {
+    const inputValue = value ? value : this.state.inputValue;
+    
+    if (value)
+      this.setState({ inputValue });
 
     const updated = this.state.connection.clone({ body: {
       type: 'TextualBody',
@@ -104,7 +107,7 @@ export default class PayloadEditor extends Component {
 
           <span
             className="r6o-icon ok"
-            onClick={this.onSubmit}>
+            onClick={() => this.onSubmit()}>
             <CheckIcon width={14} />
           </span>
         </div>
